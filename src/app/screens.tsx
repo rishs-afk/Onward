@@ -3787,58 +3787,88 @@ export function AboutOnwardScreen({ onBack }: { onBack: () => void }) {
 // ─── Screen: Launch / Session Resolution ─────────────────────────────────────
 
 export function LaunchScreen({ onDone }: { onDone: () => void }) {
-  const [step, setStep] = useState(0);
-  const steps = [
-    "Preparing your account…",
-    "Loading your Journeys…",
-    "Checking reservations…",
-    "Almost ready…",
-  ];
-
-  useEffect(() => {
-    const timers = steps.map((_, i) =>
-      setTimeout(() => setStep(i), i * 700)
-    );
-    const done = setTimeout(onDone, steps.length * 700 + 400);
-    return () => { timers.forEach(clearTimeout); clearTimeout(done); };
-  }, []);
-
   return (
     <div
-      className="flex flex-col h-full items-center justify-center"
+      className="flex h-full flex-col overflow-hidden px-5 pb-8 pt-3"
       style={{ background: "#F5F7F6", fontFamily: "'Figtree', sans-serif" }}
     >
-      <div className="flex flex-col items-center text-center px-8">
-        <div className="w-[82px] h-[82px] rounded-[26px] bg-white border border-[#DDE4E3] flex items-center justify-center mb-8 shadow-[0_18px_45px_rgba(21,62,74,0.12)]">
-          <div className="w-[58px] h-[58px] rounded-[20px] bg-[#BDE3DC] flex items-center justify-center">
-            <Plane size={28} className="text-[#153E4A]" style={{ transform: "rotate(-15deg)" }} />
-          </div>
-        </div>
-
-        <h1
-          className="text-[40px] leading-none tracking-tight text-[#153E4A] mb-2"
+      <div className="flex h-10 flex-shrink-0 items-center justify-between">
+        <p
+          className="text-[24px] leading-none text-[#153E4A]"
           style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
         >
           Onward
-        </h1>
-        <p className="text-[#68757B] text-[14px] font-medium mb-14">Your Journeys, organised.</p>
+        </p>
+        <div className="rounded-full border border-[#DDE4E3] bg-white/70 px-3 py-1">
+          <span className="text-[11px] font-bold uppercase tracking-wide text-[#68757B]">Journeys</span>
+        </div>
+      </div>
 
-        <div className="flex items-center gap-1.5 mb-5">
-          {steps.map((_, i) => (
+      <div className="relative mt-4 min-h-0 flex-1 overflow-hidden rounded-[34px] border border-[#DDE4E3] bg-[#BDE3DC] shadow-[0_22px_60px_rgba(21,62,74,0.16)]">
+        <div className="absolute -left-[88px] -top-[64px] h-[280px] w-[230px] rotate-[-39deg] rounded-[38px] bg-[#F2765E]" />
+        <div className="absolute -right-[78px] -top-[28px] h-[210px] w-[210px] rotate-[31deg] rounded-[36px] bg-[#EEEAE1]" />
+        <div className="absolute right-[18px] top-[52px] h-[156px] w-[148px] rotate-[-34deg] overflow-hidden">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
             <div
               key={i}
-              className="rounded-full transition-all duration-500"
-              style={{
-                width: i === step ? 24 : 6,
-                height: 6,
-                background: i <= step ? "#1E7A78" : "#DDE4E3",
-              }}
+              className="absolute h-[11px] w-[180px] rounded-full bg-[#172126]"
+              style={{ top: i * 26, left: -16 }}
             />
           ))}
         </div>
+        <div className="absolute -bottom-[86px] -right-[62px] h-[230px] w-[235px] rotate-[-12deg] rounded-[46px] bg-[#153E4A]" />
+        <div className="absolute -bottom-[48px] -left-[52px] h-[150px] w-[190px] rotate-[22deg] rounded-[36px] bg-white/40" />
 
-        <p className="text-[13px] text-[#68757B] h-5 transition-all duration-300">
-          {steps[step] ?? ""}
+        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 350 430" fill="none" aria-hidden="true">
+          <path d="M30 84 L96 152 L96 276 L148 330" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" opacity="0.95" />
+          <path d="M294 72 L230 132 L246 214 L188 270" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" opacity="0.82" />
+          <path d="M68 330 C108 296 153 295 198 330 C226 352 253 359 292 340" stroke="#153E4A" strokeWidth="3" strokeLinecap="round" opacity="0.38" />
+          <circle cx="96" cy="152" r="6" fill="#153E4A" />
+          <circle cx="188" cy="270" r="6" fill="#F2765E" />
+          <circle cx="292" cy="340" r="6" fill="#1E7A78" />
+        </svg>
+
+        <div className="absolute bottom-5 left-5 right-5 rounded-[26px] border border-white/70 bg-white/90 px-4 py-3 shadow-[0_16px_36px_rgba(21,62,74,0.16)] backdrop-blur">
+          <div className="mb-2 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-[#1E7A78]" />
+              <span className="text-[10px] font-bold uppercase tracking-wide text-[#1E7A78]">Next</span>
+            </div>
+            <span className="text-[11px] font-semibold text-[#68757B]">15:30</span>
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[15px] font-bold leading-tight text-[#172126]">Train to Porto</p>
+              <p className="mt-0.5 text-[11px] text-[#68757B]">Platform 2 · Seat 22A</p>
+            </div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#EEEAE1]">
+              <Train size={17} className="text-[#153E4A]" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-shrink-0 pt-7 text-center">
+        <h1
+          className="mx-auto max-w-[310px] text-[34px] font-bold leading-[1.05] text-[#172126]"
+        >
+          Travel plans, calmly organised.
+        </h1>
+        <p className="mx-auto mt-3 max-w-[286px] text-[14px] font-medium leading-relaxed text-[#68757B]">
+          Onward turns reservations into clear Journey timelines.
+        </p>
+      </div>
+
+      <div className="flex-shrink-0 pt-6">
+        <button
+          onClick={onDone}
+          className="flex h-[54px] w-full items-center justify-center rounded-full bg-[#172126] text-[15px] font-bold text-white shadow-[0_16px_32px_rgba(23,33,38,0.22)] active:opacity-90"
+        >
+          Get started
+        </button>
+
+        <p className="mt-3 text-center text-[11px] font-medium text-[#68757B]">
+          Sign in with Apple to continue
         </p>
       </div>
     </div>

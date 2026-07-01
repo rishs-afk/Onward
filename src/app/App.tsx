@@ -765,7 +765,7 @@ const SIDEBAR: [Screen | null, string][] = [
 // ─── App ──────────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>("welcome");
+  const [screen, setScreen] = useState<Screen>("launch");
   const [journeyFormMode, setJourneyFormMode] = useState<"add" | "edit">("add");
 
   const isOnboarding = [
