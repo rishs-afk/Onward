@@ -3792,16 +3792,13 @@ export function LaunchScreen({ onDone }: { onDone: () => void }) {
       className="flex h-full flex-col overflow-hidden px-5 pb-8 pt-3"
       style={{ background: "#F5F7F6", fontFamily: "'Figtree', sans-serif" }}
     >
-      <div className="flex h-10 flex-shrink-0 items-center justify-between">
+      <div className="flex h-10 flex-shrink-0 items-center">
         <p
           className="text-[24px] leading-none text-[#153E4A]"
           style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
         >
           Onward
         </p>
-        <div className="rounded-full border border-[#DDE4E3] bg-white/70 px-3 py-1">
-          <span className="text-[11px] font-bold uppercase tracking-wide text-[#68757B]">Journeys</span>
-        </div>
       </div>
 
       <div className="relative mt-4 min-h-0 flex-1 overflow-hidden rounded-[34px] border border-[#DDE4E3] bg-[#BDE3DC] shadow-[0_22px_60px_rgba(21,62,74,0.16)]">
@@ -3841,8 +3838,8 @@ export function LaunchScreen({ onDone }: { onDone: () => void }) {
               <p className="text-[15px] font-bold leading-tight text-[#172126]">Train to Porto</p>
               <p className="mt-0.5 text-[11px] text-[#68757B]">Platform 2 · Seat 22A</p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#EEEAE1]">
-              <Train size={17} className="text-[#153E4A]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#153E4A] shadow-[0_8px_18px_rgba(21,62,74,0.18)]">
+              <Train size={18} className="text-white" />
             </div>
           </div>
         </div>
@@ -3854,8 +3851,8 @@ export function LaunchScreen({ onDone }: { onDone: () => void }) {
         >
           Travel plans, calmly organised.
         </h1>
-        <p className="mx-auto mt-3 max-w-[286px] text-[14px] font-medium leading-relaxed text-[#68757B]">
-          Onward turns reservations into clear Journey timelines.
+        <p className="mx-auto mt-3 max-w-[286px] text-[14px] font-medium leading-[1.28] text-[#68757B]">
+          Your reservations become clear, calm Journey plans.
         </p>
       </div>
 
