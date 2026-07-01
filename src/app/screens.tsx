@@ -3789,19 +3789,19 @@ export function AboutOnwardScreen({ onBack }: { onBack: () => void }) {
 export function LaunchScreen({ onDone }: { onDone: () => void }) {
   return (
     <div
-      className="flex h-full flex-col overflow-hidden px-5 pb-8 pt-3"
+      className="flex h-full flex-col overflow-hidden px-5 pb-7 pt-4"
       style={{ background: "#F5F7F6", fontFamily: "'Figtree', sans-serif" }}
     >
-      <div className="flex h-10 flex-shrink-0 items-center">
+      <div className="flex h-10 flex-shrink-0 items-center justify-center">
         <p
-          className="text-[24px] leading-none text-[#153E4A]"
+          className="text-[23px] leading-none text-[#153E4A]"
           style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
         >
           Onward
         </p>
       </div>
 
-      <div className="relative mt-4 min-h-0 flex-1 overflow-hidden rounded-[34px] border border-[#DDE4E3] bg-[#BDE3DC] shadow-[0_22px_60px_rgba(21,62,74,0.16)]">
+      <div className="relative mt-3 h-[342px] flex-shrink-0 overflow-hidden rounded-[32px] border border-[#DDE4E3] bg-[#BDE3DC] shadow-[0_18px_48px_rgba(21,62,74,0.14)]">
         <div className="absolute -left-[88px] -top-[64px] h-[280px] w-[230px] rotate-[-39deg] rounded-[38px] bg-[#F2765E]" />
         <div className="absolute -right-[78px] -top-[28px] h-[210px] w-[210px] rotate-[31deg] rounded-[36px] bg-[#EEEAE1]" />
         <div className="absolute right-[18px] top-[52px] h-[156px] w-[148px] rotate-[-34deg] overflow-hidden">
@@ -3845,28 +3845,24 @@ export function LaunchScreen({ onDone }: { onDone: () => void }) {
         </div>
       </div>
 
-      <div className="flex-shrink-0 pt-7 text-center">
+      <div className="flex-shrink-0 pt-6 text-center">
         <h1
-          className="mx-auto max-w-[310px] text-[34px] font-bold leading-[1.05] text-[#172126]"
+          className="mx-auto max-w-[300px] text-[32px] font-bold leading-[1.05] text-[#172126]"
         >
           Travel plans, calmly organised.
         </h1>
-        <p className="mx-auto mt-3 max-w-[286px] text-[14px] font-medium leading-[1.28] text-[#68757B]">
+        <p className="mx-auto mt-3 max-w-[276px] text-[14px] font-medium leading-[1.28] text-[#68757B]">
           Your reservations become clear, calm Journey plans.
         </p>
       </div>
 
-      <div className="flex-shrink-0 pt-6">
+      <div className="mt-auto flex-shrink-0 pt-6">
         <button
           onClick={onDone}
           className="flex h-[54px] w-full items-center justify-center rounded-full bg-[#172126] text-[15px] font-bold text-white shadow-[0_16px_32px_rgba(23,33,38,0.22)] active:opacity-90"
         >
           Get started
         </button>
-
-        <p className="mt-3 text-center text-[11px] font-medium text-[#68757B]">
-          Sign in with Apple to continue
-        </p>
       </div>
     </div>
   );
