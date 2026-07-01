@@ -8,18 +8,38 @@ travel dashboard or a stock shadcn demo.
 ## Core Direction
 
 Onward is a calm, graphic, native-feeling travel organiser. It turns scattered
-reservations into clear Journey timelines. The visual language should feel:
+reservations into clear Journey plans. The visual language should now follow the
+reference theme: playful but controlled mobile UI, oversized soft cards, cream
+phone surfaces, high-contrast black controls, and abstract route artwork made
+from bold geometric color blocks.
 
-- Calm, premium, and useful under pressure
-- Graphic and memorable without becoming decorative clutter
-- Native to iOS, but not visually anonymous
-- Warm and human, with enough structure for dense travel information
-- More like an editorial mobile product than a SaaS dashboard
+- Calm and useful under pressure, but visually warmer and more distinctive
+- Graphic and mobile-native, with strong shapes instead of generic dashboards
+- Playful through color and geometry, not through cute copy or decoration
+- Warm, tactile, and card-led, with enough structure for dense travel details
+- More like a polished consumer mobile concept than a SaaS dashboard
 
-The reference direction is an expressive mobile UI with soft pastel surfaces,
-bold abstract geometry, simple black/Ink typography, rounded cards, and confident
-color blocking. Borrow its graphic confidence and layout rhythm, not its
-subscription-product content.
+## Current Theme Snapshot
+
+This is the current visual target for the app:
+
+- A soft mint canvas around the product, with cream phone interiors and warm
+  off-white cards
+- Black or near-black primary controls, text, phone chrome, and tab bars
+- Large abstract Journey artwork built from seafoam, coral, yellow, sky blue,
+  black stripe patterns, white route lines, and cropped geometric planes
+- Rounded card rows that feel inflated: very large radius, subtle border, soft
+  exterior shadow, off-white fill, white icon tile, bold title, and heavy Slate
+  support copy
+- Dense mobile screens that still feel touchable: cream base, colored list rows,
+  black bottom navigation, rounded segmented cards, and compact metadata
+- Large, heavy Figtree headlines in Ink Black
+- Short support copy with controlled line breaks
+- Black pill CTAs that feel native, decisive, and grounded
+
+The theme is graphic and poster-like, but the app should still feel operational.
+Every decorative shape should support the sense of movement, routes, time,
+documents, or travel context.
 
 ## Palette
 
@@ -27,33 +47,54 @@ Use this palette as the default source of truth.
 
 | Role | Name | Hex | Use |
 | --- | --- | --- | --- |
-| Primary brand | Deep Ocean | `#153E4A` | Brand marks, deep text accents, key structure |
-| Primary action | Tidal Teal | `#1E7A78` | Main actions, selected states, progress |
-| Light accent | Seafoam | `#BDE3DC` | Large soft panels, abstract shapes, calm highlights |
-| Warm accent | Sunset Coral | `#F2765E` | Important emphasis, warm graphic shapes, alerts when not destructive |
-| App background | Cloud | `#F5F7F6` | Main app background |
-| Card surface | White | `#FFFFFF` | Cards and floating surfaces |
-| Primary text | Ink | `#172126` | Main text |
-| Secondary text | Slate | `#68757B` | Supporting text and metadata |
-| Borders | Mist | `#DDE4E3` | Dividers, card borders, inactive progress |
-| Muted background | Pale Sand | `#EEEAE1` | Secondary controls, subtle grouped areas |
+| Primary text/action | Ink Black | `#080A0A` | Main text, primary CTAs, phone chrome, bottom nav |
+| App background | Soft Mint | `#DDEBE6` | Outer canvas and large calm bands |
+| Phone surface | Warm Cream | `#F6EDC9` | In-phone app surfaces and warm section backgrounds |
+| Card surface | Off White | `#F8FAF8` | Large inflated cards and content rows |
+| Border | Mist Line | `#DDE5E2` | Card outlines and dividers |
+| Secondary text | Slate | `#68757B` | Supporting copy and metadata |
+| Graphic accent | Seafoam | `#8CCFBD` | Large abstract blocks and calm status surfaces |
+| Graphic accent | Journey Yellow | `#F5D64A` | Bold graphic blocks, charts, highlight rows |
+| Graphic accent | Sunset Coral | `#F17455` | Important graphic blocks and warm attention states |
+| Graphic accent | Sky Blue | `#A9C8F0` | Secondary rows, small panels, quiet contrast |
 
-Avoid returning to the previous beige-heavy palette or old navy/coral pairings
-unless a legacy screen is being intentionally preserved during migration.
+The old Deep Ocean and Tidal Teal direction should be treated as legacy unless a
+screen has not yet been migrated. The new reference is warmer, more graphic, and
+more black-led.
+
+Suggested balance:
+
+- Soft Mint and Warm Cream should do most of the environmental work.
+- Ink Black should provide structure, controls, and confidence.
+- Seafoam, Yellow, Coral, and Sky Blue should appear as bold blocks or list rows,
+  not washed-out accents.
+- Off White cards should sit on Soft Mint, Warm Cream, or white space with
+  rounded inflated edges.
+- Do not let cream become the whole identity. Balance it with black, seafoam,
+  coral, yellow, and blue.
 
 ## Graphic System
 
 Use abstract travel-inspired graphics as a major brand device, especially on
-launch, onboarding, empty states, and feature primers.
+launch, onboarding, empty states, and feature primers. The graphic language
+should match the reference: cropped geometric planes, diagonal color fields,
+black stripe overlays, white route lines, and phone mockups with colored content
+rows.
 
 Preferred elements:
 
-- Large rounded color planes in Seafoam, Pale Sand, Sunset Coral, and Cloud
-- Diagonal blocks and cropped geometric shapes
-- Thin route lines, waypoint dots, arcs, and simple map-like paths
-- Occasional high-contrast black or Deep Ocean stripe patterns
-- Big negative space and confident spacing
-- Shapes that crop off-screen or under the dynamic island for energy
+- A large rounded hero panel, usually Seafoam or Soft Mint-based, with generous
+  corner radii
+- Cropped Sunset Coral, Journey Yellow, Sky Blue, and cream blocks entering from
+  panel edges
+- Black grounding shapes, black phone chrome, and black tab bars
+- Diagonal black stripe patterns used boldly enough to read as a brand device
+- Thin white route lines, waypoint dots, arcs, and simple map-like paths
+- Small black, coral, or seafoam dots to imply progression and stops
+- Off White floating cards that sit over the artwork like live Journey
+  information
+- Cream phone screens with coral, yellow, seafoam, and blue content rows
+- Big negative space and confident spacing around the whole composition
 
 Avoid:
 
@@ -62,6 +103,9 @@ Avoid:
 - Overly literal airplane illustrations everywhere
 - Gradient blobs, bokeh, decorative orbs, or glassy decoration
 - Dense dashboards on first-contact screens
+- Watered-down pastel panels where icons or text lose contrast
+- Small, timid cards with tiny radius and faint shadows
+- Dark teal as the dominant identity color
 
 ## Layout Principles
 
@@ -69,13 +113,19 @@ Design for an iPhone 15 Pro frame first, then ensure smaller phones still work.
 
 - Let hero and onboarding screens be visually bold and simple.
 - Use one primary idea per screen.
-- Make the top half visual or contextual, and the lower half decisional.
+- Make the upper portion visual or contextual, and the lower portion decisional.
 - Keep primary actions pinned near the lower safe area when appropriate.
 - Use cards for actual grouped content, not as wrappers around every section.
 - Do not nest cards inside cards.
-- Keep repeated list rows compact, scannable, and aligned.
+- Cards should be oversized, tactile, and rounded. A reference feature card is a
+  wide Off White row with a 40px to 52px radius, Mist Line border, soft shadow,
+  white icon tile, bold title, and substantial Slate support text.
+- Keep repeated list rows compact, scannable, and aligned inside the phone UI.
 - Prefer native-feeling segmented controls, toggles, sheets, lists, and menus.
 - Keep tap targets comfortable: aim for 44px minimum.
+- Avoid letting the hero consume so much height that headline, copy, and CTA
+  feel squeezed.
+- Avoid adding secondary text under the CTA unless it is necessary for the task.
 
 ## Typography
 
@@ -83,11 +133,15 @@ Default type should feel clean, confident, and readable.
 
 - Use Figtree for most UI text.
 - Use Fraunces sparingly for brand moments such as the Onward wordmark.
-- Headlines should be direct and slightly editorial, not marketing-fluffy.
-- Body copy should be short, concrete, and reassuring.
+- Headlines should be direct, heavy, and slightly editorial, not
+  marketing-fluffy.
+- Body copy should be short, concrete, and reassuring, but card copy may be
+  larger and heavier than typical metadata.
 - Do not scale font size with viewport width.
 - Avoid negative letter spacing.
 - Use uppercase micro-labels sparingly for categories and metadata.
+- Keep body copy line-height tight enough to feel designed, but not cramped.
+- Watch for orphan words in hero copy. Rewrite or constrain width when needed.
 
 ## Launch And Onboarding
 
@@ -95,38 +149,61 @@ The launch/welcome experience should establish the graphic brand immediately.
 
 Preferred launch direction:
 
-- Cloud or Seafoam background
-- Large abstract travel composition in the upper portion of the screen
-- Ink or Deep Ocean headline
-- Short supporting copy in Slate
-- Deep Ocean or near-black pill CTA with white text
-- Tidal Teal or Sunset Coral used as a small progress or emphasis color
+- Soft Mint or Warm Cream background with a clean top brand area
+- Fraunces `Onward` wordmark in Ink Black or a very dark brand tone
+- Optional context pills only when they clarify the screen; avoid default
+  decorative chips on launch
+- Abstract Journey artwork in a large rounded panel or full-phone composition,
+  but not so tall that the page feels crowded
+- Floating "Next" card over the artwork with time, title, metadata, and an icon
+- Ink Black headline, centered or strongly anchored
+- Short Slate support copy with balanced line breaks
+- Black pill CTA with white text
+- No secondary sign-in note unless the screen is specifically an auth choice
 
 Possible headline style:
 
 `Travel plans, calmly organised.`
 
-Possible support copy:
+Preferred support copy:
 
-`Onward turns reservations into clear Journey timelines.`
+`Your reservations become clear, calm Journey plans.`
+
+Avoid copy that leaves a single-word orphan such as `timelines.` on its own
+line.
 
 Keep the transient loading state separate from the first user-facing welcome
 screen. Loading can be quiet; welcome should be memorable.
+
+Launch visual anatomy:
+
+- Top brand row: simple, intentional, and not overfilled
+- Hero panel: Soft Mint or Seafoam base, Coral/Yellow/Sky Blue/Cream shapes,
+  black stripe pattern, route lines, waypoint dots
+- Overlay card: Off White, highly rounded, useful, and legible
+- Copy block: one headline, one support sentence
+- CTA block: one primary button
 
 ## Components
 
 Buttons:
 
-- Primary action: Deep Ocean or Tidal Teal filled pill, white text.
-- Secondary action: transparent or Pale Sand surface with Ink text.
+- Primary action: Ink Black filled pill, white text.
+- Secondary action: Off White, Warm Cream, or outline surface with Ink Black text.
 - Destructive action: use red only when truly destructive.
 - Avoid too many same-weight buttons on a screen.
 
 Cards:
 
-- White card on Cloud or Pale Sand backgrounds.
-- Mist borders and soft shadows only where depth helps.
-- Rounded corners can be generous, but keep them consistent.
+- Off White card on Soft Mint, Warm Cream, or white space.
+- Mist Line border and soft external shadow are part of the reference card
+  style.
+- Rounded corners should be very generous. Use 32px minimum for small cards and
+  40px to 52px for large feature rows.
+- Icon tiles inside cards should be white or very light, rounded around 22px to
+  28px, and large enough to feel tactile.
+- Text inside cards should be left-aligned, bold, and spacious. Titles are heavy
+  Ink Black; support copy is Slate and semi-bold.
 - Cards should contain real grouped information: reservations, Journey summaries,
   documents, expenses, or settings groups.
 
@@ -139,8 +216,10 @@ Lists:
 
 Progress and status:
 
-- Tidal Teal for normal progress.
+- Ink Black or Seafoam for normal progress depending on background contrast.
 - Sunset Coral for warm attention.
+- Journey Yellow for active, optimistic, or highlighted states when legibility is
+  strong.
 - Red only for urgent or destructive states.
 - Always pair status color with explicit text.
 

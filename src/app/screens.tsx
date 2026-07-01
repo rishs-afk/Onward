@@ -3845,18 +3845,18 @@ export function LaunchScreen({ onDone }: { onDone: () => void }) {
         </div>
       </div>
 
-      <div className="flex-shrink-0 pt-6 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center py-6 text-center">
         <h1
           className="mx-auto max-w-[300px] text-[32px] font-bold leading-[1.05] text-[#172126]"
         >
           Travel plans, calmly organised.
         </h1>
-        <p className="mx-auto mt-3 max-w-[276px] text-[14px] font-medium leading-[1.28] text-[#68757B]">
+        <p className="mx-auto mt-4 max-w-[276px] text-[14px] font-medium leading-[1.28] text-[#68757B]">
           Your reservations become clear, calm Journey plans.
         </p>
       </div>
 
-      <div className="mt-auto flex-shrink-0 pt-6">
+      <div className="flex-shrink-0">
         <button
           onClick={onDone}
           className="flex h-[54px] w-full items-center justify-center rounded-full bg-[#172126] text-[15px] font-bold text-white shadow-[0_16px_32px_rgba(23,33,38,0.22)] active:opacity-90"

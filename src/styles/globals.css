@@ -1,0 +1,222 @@
+.onward-landing {
+  height: calc(100svh - 75px);
+  background: #f9efd1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+
+.onward-section {
+  min-height: calc(100svh - 75px);
+  scroll-margin-top: 75px;
+  scroll-snap-align: start;
+}
+
+.onward-stripes {
+  background: repeating-linear-gradient(
+    135deg,
+    #080a0a 0 12px,
+    transparent 12px 24px
+  );
+  opacity: 0.94;
+}
+
+.onward-reference-card {
+  background: #f6edc9;
+  border: 2px solid #080a0a;
+  border-radius: 34px;
+  box-shadow:
+    8px 8px 0 rgba(8, 10, 10, 0.16),
+    0 12px 22px rgba(8, 10, 10, 0.08);
+}
+
+.onward-icon-tile {
+  align-items: center;
+  background: #080a0a;
+  border: 2px solid #080a0a;
+  border-radius: 22px;
+  color: #ffffff;
+  display: flex;
+  flex-shrink: 0;
+  height: 72px;
+  justify-content: center;
+  width: 72px;
+}
+
+.onward-phone-shell {
+  background: #080a0a;
+  border-radius: 54px;
+  box-shadow:
+    0 26px 60px rgba(8, 10, 10, 0.28),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.18);
+  padding: 12px;
+}
+
+.onward-phone-screen {
+  background: #f6edc9;
+  border-radius: 42px;
+  border: 2px solid #080a0a;
+  min-height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.onward-phone-island {
+  background: #080a0a;
+  border-radius: 999px;
+  height: 24px;
+  left: 50%;
+  position: absolute;
+  top: 10px;
+  transform: translateX(-50%);
+  width: 96px;
+  z-index: 2;
+}
+
+.onward-route-line {
+  fill: none;
+  stroke: #080a0a;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+  stroke-dasharray: 720;
+  stroke-dashoffset: 0;
+  opacity: 0.16;
+}
+
+.onward-route-line-secondary {
+  opacity: 0.74;
+  stroke-width: 3;
+  stroke-dasharray: 560;
+}
+
+.onward-waypoint {
+  opacity: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.onward-reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.onward-progress-fill {
+  width: 72%;
+}
+
+.onward-timeline-line,
+.onward-flow-line {
+  overflow: hidden;
+}
+
+.onward-timeline-line::after,
+.onward-flow-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #080a0a;
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+@keyframes onward-route-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes onward-rise {
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes onward-waypoint-pop {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes onward-progress {
+  to {
+    width: 72%;
+  }
+}
+
+@keyframes onward-timeline-grow {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .onward-route-line {
+      stroke-dashoffset: 720;
+      animation: onward-route-draw linear both;
+      animation-range: entry 8% cover 66%;
+      animation-timeline: view();
+    }
+
+    .onward-route-line-secondary {
+      stroke-dashoffset: 560;
+      animation-range: entry 18% cover 76%;
+    }
+
+    .onward-waypoint {
+      opacity: 0;
+      transform: scale(0.72);
+      animation: onward-waypoint-pop linear both;
+      animation-range: entry 24% cover 46%;
+      animation-timeline: view();
+    }
+
+    .onward-reveal {
+      opacity: 1;
+      transform: translateY(10px);
+      animation: onward-rise linear both;
+      animation-range: entry 16% cover 38%;
+      animation-timeline: view();
+    }
+
+    .onward-progress-fill {
+      width: 0%;
+      animation: onward-progress linear both;
+      animation-range: entry 20% cover 68%;
+      animation-timeline: view();
+    }
+
+    .onward-timeline-line::after,
+    .onward-flow-line::after {
+      transform: scaleY(0);
+      animation: onward-timeline-grow linear both;
+      animation-range: entry 10% cover 72%;
+      animation-timeline: view();
+    }
+  }
+}
+
+@media (max-width: 639px) {
+  .onward-landing {
+    height: calc(100svh - 75px);
+    scroll-snap-type: y proximity;
+  }
+
+  .onward-section {
+    min-height: calc(100svh - 75px);
+  }
+
+  .onward-reference-card {
+    border-radius: 34px;
+  }
+
+  .onward-icon-tile {
+    border-radius: 20px;
+    height: 48px;
+    width: 48px;
+  }
+}

@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Clock, MapPin, Inbox, Settings, Wifi } from "lucide-react";
+import {
+  ArrowRight, Bell, Brain, CalendarClock,
+  ChevronDown, Clock, Compass, MailCheck, MapPin,
+  MonitorSmartphone, FileText, Hotel, Route, Settings,
+  ShieldCheck, Train, Users, Wifi, Inbox, UtensilsCrossed,
+} from "lucide-react";
 import {
   Screen, Tab, cn,
   WelcomeScreen, HowItWorksScreen, ImportReservationsScreen,
@@ -762,9 +767,824 @@ const SIDEBAR: [Screen | null, string][] = [
   ["sponsored-disclosure",      "Sponsored Disclosure"],
 ];
 
+type Surface = "home" | "screens";
+type ScreenGroupId = "all" | "core" | "live" | "assistant" | "commerce" | "system";
+
+type SidebarSection = {
+  title: string;
+  items: { screen: Screen; label: string }[];
+};
+
+const APP_FEATURES = [
+  {
+    icon: <MailCheck size={20} />,
+    title: "Import reservations",
+    copy: "Connect an inbox or forward confirmations so plans enter the Journey without manual rebuilding.",
+  },
+  {
+    icon: <Route size={20} />,
+    title: "Follow the Journey Timeline",
+    copy: "Flights, stays, trains, reservations, reminders, and documents stay ordered by what happens next.",
+  },
+  {
+    icon: <CalendarClock size={20} />,
+    title: "Know what needs attention",
+    copy: "Review uncertain imports, missing details, date conflicts, and reminders before travel day.",
+  },
+  {
+    icon: <Brain size={20} />,
+    title: "Ask in context",
+    copy: "Use the assistant for briefings, gaps, local essentials, translation, and replanning inside the Journey.",
+  },
+];
+
+const APP_IMPORT_FLOW = [
+  {
+    label: "Connected inbox",
+    title: "Find the reservation",
+    copy: "Flights, stays, trains, and booked activities are detected from confirmations.",
+  },
+  {
+    label: "Import",
+    title: "Turn it into a plan item",
+    copy: "Dates, times, locations, providers, and confirmation codes become editable details.",
+  },
+  {
+    label: "Review",
+    title: "Flag what is uncertain",
+    copy: "Onward separates clear details from anything that needs a quick human check.",
+  },
+  {
+    label: "Timeline",
+    title: "Place it in the Journey",
+    copy: "The item lands where it belongs, with documents and reminders close by.",
+  },
+];
+
+const APP_DAY_CONTEXT = [
+  {
+    label: "Now",
+    title: "Leave in 24 min",
+    copy: "Route, ticket, and station details are ready before the moment gets busy.",
+    icon: <Bell size={18} />,
+  },
+  {
+    label: "Next",
+    title: "Train to Porto",
+    copy: "The following reservation stays visible with documents attached.",
+    icon: <Train size={18} />,
+  },
+  {
+    label: "Review",
+    title: "Hotel date mismatch",
+    copy: "Potential conflicts are called out plainly, without pretending everything is settled.",
+    icon: <ShieldCheck size={18} />,
+  },
+];
+
+const APP_TRUST_POINTS = [
+  {
+    icon: <ShieldCheck size={18} />,
+    copy: "Read-only inbox access for reservation extraction.",
+  },
+  {
+    icon: <Inbox size={18} />,
+    copy: "Raw email content is not stored in the app prototype.",
+  },
+  {
+    icon: <FileText size={18} />,
+    copy: "Travel documents stay attached to the Journey context.",
+  },
+  {
+    icon: <Users size={18} />,
+    copy: "Shared Journeys keep people aligned without rebuilding the plan in chat.",
+  },
+];
+
+const APP_CARD_COLORS = ["#F17455", "#F5D64A", "#A9C8F0", "#8CCFBD"];
+const APP_FLOW_COLORS = ["#A9C8F0", "#F5D64A", "#F17455", "#8CCFBD"];
+
+const SCREEN_GROUPS: {
+  id: ScreenGroupId;
+  label: string;
+  sections?: string[];
+}[] = [
+  { id: "all", label: "All Screens" },
+  {
+    id: "core",
+    label: "Core App",
+    sections: [
+      "Onboarding", "Timeline", "Journeys", "Reservations", "Imports",
+      "Connected Inboxes & Privacy", "Journey Map", "Documents", "Journey Preparation",
+    ],
+  },
+  {
+    id: "live",
+    label: "Live Travel",
+    sections: [
+      "Live Travel", "Disruptions & Alternatives", "Leave-by", "Airport & Station Mode",
+      "Baggage", "Travel Alerts", "Live Data",
+    ],
+  },
+  {
+    id: "assistant",
+    label: "AI Assistant",
+    sections: [
+      "Assistant", "AI Journey Creation", "Day Planning & Optimisation",
+      "Destination Discovery", "Journey Intelligence", "Briefings", "Travel Preferences",
+      "Packing & Preparation", "Language & Local", "Assistant Controls",
+    ],
+  },
+  {
+    id: "commerce",
+    label: "Commerce",
+    sections: [
+      "Travel Wallet", "Journey Expenses", "Group Expenses", "Loyalty", "Booking Hub",
+      "Travel Services", "Post-Journey", "Financial Reports", "Phase 5 Settings",
+    ],
+  },
+  {
+    id: "system",
+    label: "Sharing + States",
+    sections: [
+      "Journey Organisation", "Sharing", "Calendar", "Collaboration", "Travellers",
+      "Location Sharing", "Notifications", "Settings", "Offline & Storage",
+      "System States", "Phase 5 States",
+    ],
+  },
+];
+
+const SIDEBAR_SECTIONS = SIDEBAR.reduce<SidebarSection[]>((sections, [screenId, label]) => {
+  if (screenId === null) {
+    sections.push({ title: label, items: [] });
+    return sections;
+  }
+
+  if (sections.length === 0) sections.push({ title: "Screens", items: [] });
+  sections[sections.length - 1].items.push({ screen: screenId, label });
+  return sections;
+}, []).filter((section) => section.items.length > 0);
+
+const SCREEN_COUNT = SIDEBAR.filter(([screenId]) => screenId !== null).length;
+
+function getSidebarSections(groupId: ScreenGroupId) {
+  const group = SCREEN_GROUPS.find((item) => item.id === groupId);
+  if (!group?.sections) return SIDEBAR_SECTIONS;
+
+  const allowed = new Set(group.sections);
+  return SIDEBAR_SECTIONS.filter((section) => allowed.has(section.title));
+}
+
+function isScreenInGroup(screenId: Screen, groupId: ScreenGroupId) {
+  return getSidebarSections(groupId).some((section) =>
+    section.items.some((item) => item.screen === screenId)
+  );
+}
+
+function AppNav({ surface, onSurfaceChange }: {
+  surface: Surface;
+  onSurfaceChange: (surface: Surface) => void;
+}) {
+  const tabs: { id: Surface; label: string; icon: React.ReactNode }[] = [
+    { id: "home", label: "Home", icon: <Compass size={17} /> },
+    { id: "screens", label: "Screens", icon: <MonitorSmartphone size={17} /> },
+  ];
+
+  return (
+    <header className="sticky top-0 z-50 border-b-2 border-[#080A0A] bg-[#F9EFD1]">
+      <div className="mx-auto flex min-h-[72px] w-full max-w-[1440px] flex-nowrap items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6 lg:px-8">
+        <button
+          type="button"
+          onClick={() => onSurfaceChange("home")}
+          className="flex min-w-0 items-center gap-2 text-left text-[#080A0A] sm:gap-3"
+        >
+          <span
+            className="text-[22px] leading-none sm:text-[24px]"
+            style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
+          >
+            Onward
+          </span>
+        </button>
+
+        <nav className="flex shrink-0 rounded-full border-2 border-[#080A0A] bg-[#F9EFD1] p-1 shadow-[3px_3px_0_rgba(8,10,10,0.16)]">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => onSurfaceChange(tab.id)}
+              className={cn(
+                "flex h-10 items-center gap-2 rounded-full px-3 text-[14px] font-bold transition-colors sm:px-4",
+                surface === tab.id ? "bg-[#080A0A] text-white" : "text-[#080A0A] hover:bg-[#F5D64A]"
+              )}
+            >
+              {tab.icon}
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+function JourneyArtwork() {
+  const timelineRows = [
+    { title: "Train to Porto", detail: "Platform 2 · Seat 14A", time: "10:15", color: "#F5D64A", icon: <Train size={14} /> },
+    { title: "Hotel check-in", detail: "Confirmation ready", time: "15:00", color: "#A9C8F0", icon: <Hotel size={14} /> },
+    { title: "Dinner reservation", detail: "Table for two", time: "20:30", color: "#8CCFBD", icon: <UtensilsCrossed size={14} /> },
+  ];
+
+  return (
+    <div className="relative mx-auto flex w-full max-w-[360px] flex-col items-center gap-5 sm:block sm:max-w-[540px] sm:min-h-[620px] lg:min-h-[700px]">
+      <svg className="absolute inset-0 hidden h-full w-full sm:block" viewBox="0 0 540 700" aria-hidden="true">
+        <path className="onward-route-line" d="M40 560 L120 560 L120 340 L300 340 L300 120" />
+        <path className="onward-route-line onward-route-line-secondary" d="M300 120 C360 170 400 210 440 260" />
+        {[
+          [120, 560, "#F17455"],
+          [120, 340, "#080A0A"],
+          [300, 340, "#F5D64A"],
+          [300, 120, "#080A0A"],
+        ].map(([cx, cy, fill], index) => (
+          <circle key={index} className="onward-waypoint" cx={cx} cy={cy} r="7" fill={fill as string} />
+        ))}
+      </svg>
+
+      <div className="relative z-10 w-[264px] sm:absolute sm:right-[4%] sm:top-4 sm:w-[268px] lg:w-[282px]">
+        <div className="onward-phone-shell aspect-[0.52/1]">
+          <div className="onward-phone-screen px-4 pb-20 pt-12 sm:px-5 sm:pt-14">
+            <div className="onward-phone-island" />
+            <div className="mb-3 flex items-center justify-between text-[#080A0A]">
+              <div>
+                <p className="text-[10px] font-black sm:text-[12px]">09:41</p>
+                <h3 className="text-[15px] font-black sm:text-[18px]">Lisbon Journey</h3>
+              </div>
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#080A0A]">
+                <MapPin size={15} />
+              </span>
+            </div>
+
+            <div className="mb-3 flex gap-2">
+              <span className="flex items-center gap-1 rounded-full border-2 border-[#080A0A] bg-white px-2.5 py-1 text-[10px] font-black text-[#080A0A]">
+                <CalendarClock size={11} />
+                Day 2 of 5
+              </span>
+              <span className="flex items-center gap-1 rounded-full border-2 border-[#080A0A] bg-white px-2.5 py-1 text-[10px] font-black text-[#080A0A]">
+                <Wifi size={11} />
+                Offline ready
+              </span>
+            </div>
+
+            <div className="rounded-[24px] border-2 border-[#080A0A] bg-[#F17455] p-4 text-[#080A0A]">
+              <p className="text-[11px] font-bold">Now</p>
+              <p className="mt-2 text-[24px] font-black leading-none">24 min</p>
+              <p className="mt-1 text-[11px] font-bold">Leave for station</p>
+            </div>
+
+            <div className="mt-3 grid gap-2.5">
+              {timelineRows.map((row) => (
+                <div key={row.title} className="flex min-w-0 items-center gap-2.5 rounded-[18px] border-2 border-[#080A0A] px-2.5 py-2.5 text-[#080A0A]" style={{ background: row.color }}>
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[12px] bg-[#080A0A] text-white">
+                    {row.icon}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[12px] font-black leading-tight">{row.title}</p>
+                    <p className="truncate text-[10px] font-bold opacity-70">{row.detail}</p>
+                  </div>
+                  <span className="shrink-0 text-[11px] font-black">{row.time}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="absolute bottom-4 left-1/2 flex h-12 w-[80%] -translate-x-1/2 items-center justify-around rounded-full border-2 border-[#080A0A] bg-[#080A0A] text-white">
+              <Route size={16} />
+              <Inbox size={16} />
+              <FileText size={16} />
+              <Settings size={16} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="onward-floating-card onward-reference-card relative z-20 w-full max-w-[300px] p-3.5 sm:absolute sm:left-0 sm:top-0 sm:w-[224px] sm:max-w-none sm:-rotate-[4deg]" style={{ background: "#F17455" }}>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] bg-[#080A0A] text-white">
+            <FileText size={16} />
+          </span>
+          <div>
+            <p className="text-[13px] font-black leading-tight text-[#080A0A]">Boarding pass ready</p>
+            <p className="mt-0.5 text-[11px] font-bold text-[#080A0A]/70">Saved for offline access</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="onward-floating-card onward-reference-card relative z-20 w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[46%] sm:w-[236px] sm:max-w-none sm:rotate-[5deg]" style={{ background: "#A9C8F0" }}>
+        <div className="mb-2 flex items-center justify-between">
+          <div className="flex -space-x-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#080A0A] bg-[#F6EDC9] text-[10px] font-black text-[#080A0A]">M</span>
+            <span className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#080A0A] bg-[#8CCFBD] text-[10px] font-black text-[#080A0A]">J</span>
+          </div>
+          <Users size={16} className="text-[#080A0A]/60" />
+        </div>
+        <p className="text-[13px] font-black leading-tight text-[#080A0A]">Shared with Maria & Jono</p>
+        <p className="mt-0.5 text-[11px] font-bold text-[#080A0A]/70">Both can see this Journey</p>
+      </div>
+
+      <div className="onward-floating-card onward-reference-card relative z-30 w-full max-w-[320px] p-4 sm:absolute sm:bottom-0 sm:left-4 sm:w-[320px] sm:max-w-none sm:rotate-[-2deg]" style={{ background: "#F5D64A" }}>
+        <div className="mb-3 flex items-start justify-between gap-4">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#080A0A]/65">Next</p>
+            <h3 className="mt-1 text-[18px] font-black leading-tight text-[#080A0A]">Leave for Rossio Station</h3>
+            <p className="mt-1 text-[12px] font-bold text-[#080A0A]/70">08:05 reminder · ticket saved offline</p>
+          </div>
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] bg-[#080A0A] text-white">
+            <Train size={18} />
+          </span>
+        </div>
+        <div className="h-2 overflow-hidden rounded-full border border-[#080A0A] bg-[#F8FAF8]">
+          <div className="onward-progress-fill h-full rounded-full bg-[#080A0A]" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function JourneyContextRows() {
+  return (
+    <div className="grid gap-4">
+      {APP_FEATURES.map((feature, index) => (
+        <article
+          key={feature.title}
+          className="onward-reveal onward-reference-card flex gap-4 p-4 sm:gap-5 sm:p-5 xl:p-6"
+          style={{ background: APP_CARD_COLORS[index % APP_CARD_COLORS.length] }}
+        >
+          <div className="onward-icon-tile">
+            {feature.icon}
+          </div>
+          <div>
+            <h3 className="text-[18px] font-black leading-tight text-[#080A0A] sm:text-[24px]">{feature.title}</h3>
+            <p className="mt-2 hidden text-[15px] font-bold leading-6 text-[#080A0A]/70 sm:block lg:text-[17px] lg:leading-7">{feature.copy}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function MiniTimeline() {
+  const timelineItems = [
+    { time: "08:05", title: "Leave for station", detail: "Car reminder and route ready", icon: <Clock size={18} />, color: "#F17455" },
+    { time: "10:15", title: "Train to Porto", detail: "Platform and ticket attached", icon: <Train size={18} />, color: "#F5D64A" },
+    { time: "15:00", title: "Hotel check-in", detail: "Document saved offline", icon: <Hotel size={18} />, color: "#A9C8F0" },
+  ];
+
+  return (
+    <div className="relative max-w-[620px] pl-16">
+      <div className="onward-timeline-line absolute left-6 top-8 h-[calc(100%-64px)] w-1 rounded-full bg-[#080A0A]" />
+      <div className="grid gap-4">
+        {timelineItems.map((item) => (
+          <article
+            key={item.title}
+            className="onward-reveal relative rounded-[32px] border-2 border-[#080A0A] p-4 text-[#080A0A] shadow-[8px_8px_0_rgba(8,10,10,0.14)] sm:p-5"
+            style={{ background: item.color }}
+          >
+            <span className="absolute left-[-64px] top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[18px] border-2 border-[#080A0A] bg-[#080A0A] text-white">
+              {item.icon}
+            </span>
+            <div className="grid gap-2 sm:grid-cols-[86px_1fr] sm:items-center">
+              <p className="text-[14px] font-black leading-none">{item.time}</p>
+              <div>
+                <h3 className="text-[18px] font-black leading-tight sm:text-[21px]">{item.title}</h3>
+                <p className="mt-1 text-[13px] font-bold leading-5 text-[#080A0A]/70 sm:text-[14px]">{item.detail}</p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ImportFlowPanel() {
+  return (
+    <div className="relative max-w-[620px] pl-16">
+      <div className="onward-flow-line absolute left-6 top-8 h-[calc(100%-64px)] w-1 rounded-full bg-[#080A0A]" />
+      <div className="grid gap-4">
+        {APP_IMPORT_FLOW.map((item, index) => (
+          <article
+            key={item.title}
+            className="onward-reveal onward-reference-card relative p-4 sm:p-5"
+            style={{ background: APP_FLOW_COLORS[index % APP_FLOW_COLORS.length] }}
+          >
+            <div className="absolute left-[-64px] top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[18px] border-2 border-[#080A0A] bg-[#080A0A] text-[12px] font-black text-white">
+              {String(index + 1).padStart(2, "0")}
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#080A0A]/65">{item.label}</p>
+              <h3 className="mt-1 text-[17px] font-black leading-tight text-[#080A0A]">{item.title}</h3>
+              <p className="mt-1 hidden text-[13px] font-bold leading-5 text-[#080A0A]/70 sm:block">{item.copy}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DayContextPanel() {
+  return (
+    <div className="grid gap-4">
+      {APP_DAY_CONTEXT.map((item, index) => (
+        <article
+          key={item.title}
+          className="onward-reveal rounded-[30px] border-2 border-[#080A0A] p-4 text-[#080A0A] shadow-[6px_6px_0_rgba(8,10,10,0.12)] sm:p-5"
+          style={{ background: ["#F17455", "#F5D64A", "#A9C8F0"][index] }}
+        >
+          <div className="mb-3 flex items-start justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#080A0A]/65">{item.label}</p>
+              <h3 className="mt-1 text-[18px] font-black leading-tight">{item.title}</h3>
+            </div>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#080A0A] text-white">
+              {item.icon}
+            </span>
+          </div>
+          <p className="text-[13px] font-bold leading-5 text-[#080A0A]/70">{item.copy}</p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
+  return (
+    <main className="onward-landing text-[#080A0A]">
+      <section className="onward-section relative grid snap-start items-center gap-6 px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:block lg:bg-[#F9EFD1] lg:p-0">
+        <div className="mx-auto w-full max-w-[560px] lg:hidden">
+          <p
+            className="mb-8 text-[42px] leading-none text-[#080A0A]"
+            style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
+          >
+            Onward
+          </p>
+          <h1 className="max-w-[520px] text-[40px] font-black leading-[1.04] text-[#080A0A] sm:text-[56px] xl:text-[64px]">
+            Every step of the journey,{" "}
+            <span style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>calmly organised</span>.
+          </h1>
+          <p className="mt-5 max-w-[420px] text-[17px] font-normal leading-6 text-[#68757B] sm:text-[19px] sm:leading-7">
+            From the flight to the last cup of coffee, your plans, documents, and next moves stay clear and ready, wherever the trip takes you.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-2.5">
+            {[
+              { label: "Connected inbox", icon: <MailCheck size={14} /> },
+              { label: "Journey Timeline", icon: <Route size={14} /> },
+              { label: "Travel documents", icon: <FileText size={14} /> },
+            ].map((item) => (
+              <span
+                key={item.label}
+                className="flex items-center gap-1.5 rounded-full border border-[#C9D6D2] bg-white/80 px-3.5 py-2 text-[12px] font-black text-[#080A0A] shadow-[0_2px_10px_rgba(8,10,10,0.05)] backdrop-blur"
+              >
+                {item.icon}
+                {item.label}
+              </span>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              href="#timeline"
+              className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#080A0A] px-6 text-[15px] font-black text-white transition-transform hover:-translate-y-0.5"
+            >
+              See the Journey
+              <ArrowRight size={17} />
+            </a>
+            <button
+              type="button"
+              onClick={onOpenScreens}
+              className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#F6EDC9] px-5 text-[15px] font-black text-[#080A0A] transition-colors hover:bg-[#F5D64A]"
+            >
+              Screens
+              <MonitorSmartphone size={17} />
+            </button>
+          </div>
+        </div>
+        <div className="mx-auto w-full max-w-[720px] lg:hidden">
+          <JourneyArtwork />
+        </div>
+
+        <div className="hidden w-full overflow-hidden lg:flex lg:h-[calc(100svh-75px)] lg:flex-col lg:items-center lg:gap-14 lg:pb-4 lg:pt-24">
+          <div className="mx-auto flex w-full max-w-[720px] shrink-0 flex-col items-center px-12 text-center">
+            <h1 className="text-[46px] font-black leading-[1.04] text-[#080A0A] xl:text-[56px]">
+              Every step of the journey,{" "}
+              <span style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>calmly organised</span>.
+            </h1>
+            <p className="mt-6 max-w-[520px] text-[19px] font-normal leading-7 text-[#68757B]">
+              From the flight to the last cup of coffee, your plans, documents, and next moves stay clear and ready, wherever the trip takes you.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <a
+                href="#timeline"
+                className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#080A0A] px-6 text-[15px] font-black text-white transition-transform hover:-translate-y-0.5"
+              >
+                See the Journey
+                <ArrowRight size={17} />
+              </a>
+            </div>
+          </div>
+
+          <div className="min-h-0 w-full flex-1 px-16">
+            <div className="relative h-full w-full">
+              <img
+                src="/hero-travel-illustration.png"
+                alt="Illustration of a traveller moving through a trip: arriving at the airport, boarding a flight, visiting a museum, hiking, exploring a city, and relaxing at a cafe."
+                className="absolute inset-0 h-full w-full object-cover object-center"
+                style={{
+                  maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+                  WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <a
+          href="#timeline"
+          className="absolute bottom-4 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-[11px] font-black uppercase tracking-[0.14em] text-[#68757B] transition-colors hover:text-[#080A0A] sm:flex lg:hidden"
+        >
+          Scroll
+          <ChevronDown size={16} className="animate-bounce" />
+        </a>
+      </section>
+
+      <section className="onward-section grid snap-start items-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-12">
+        <div className="mx-auto w-full max-w-[500px]">
+          <p className="mb-3 text-[12px] font-black uppercase tracking-[0.14em] text-[#F17455]">Concept</p>
+          <h2 className="text-[34px] font-black leading-[1.06] text-[#080A0A] sm:text-[48px]">
+            A Journey is the home base.
+          </h2>
+          <p className="mt-5 text-[16px] font-bold leading-7 text-[#68757B]">
+            Onward is organised around the thing travellers actually need: one place for plans, documents, reminders, people, and review.
+          </p>
+        </div>
+        <div className="mx-auto w-full max-w-[580px]">
+          <JourneyContextRows />
+        </div>
+      </section>
+
+      <section id="timeline" className="onward-section grid snap-start items-center gap-6 px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12">
+        <div className="mx-auto w-full max-w-[500px]">
+          <p className="mb-3 text-[12px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Timeline</p>
+          <h2 className="text-[34px] font-black leading-[1.06] text-[#080A0A] sm:text-[48px]">
+            Know what happens next.
+          </h2>
+          <p className="mt-5 text-[16px] font-bold leading-7 text-[#68757B]">
+            Flights, stays, trains, documents, and reminders sit in one ordered Journey Timeline.
+          </p>
+          <div className="mt-6 hidden gap-3 sm:grid sm:grid-cols-3">
+            {[
+              { label: "Now", copy: "What matters first", icon: <Clock size={15} />, color: "#F17455" },
+              { label: "Next", copy: "What follows", icon: <Train size={15} />, color: "#F5D64A" },
+              { label: "Review", copy: "What needs attention", icon: <ShieldCheck size={15} />, color: "#A9C8F0" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="onward-reveal rounded-[24px] border-2 border-[#080A0A] p-3 shadow-[5px_5px_0_rgba(8,10,10,0.12)]"
+                style={{ background: item.color }}
+              >
+                <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-[12px] bg-[#080A0A] text-white">
+                  {item.icon}
+                </div>
+                <p className="text-[13px] font-black text-[#080A0A]">{item.label}</p>
+                <p className="mt-1 text-[12px] font-bold leading-4 text-[#080A0A]/70">{item.copy}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mx-auto w-full max-w-[560px]">
+          <MiniTimeline />
+        </div>
+      </section>
+
+      <section className="onward-section grid snap-start items-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.85fr_1.15fr] lg:px-12">
+        <div className="mx-auto w-full max-w-[460px]">
+          <p className="mb-3 text-[12px] font-black uppercase tracking-[0.14em] text-[#F17455]">Import and review</p>
+          <h2 className="text-[34px] font-black leading-[1.06] text-[#080A0A] sm:text-[48px]">
+            No more digging through confirmations.
+          </h2>
+          <p className="mt-5 text-[16px] font-bold leading-7 text-[#68757B]">
+            Onward keeps the useful details, flags what needs review, and leaves the source material intact.
+          </p>
+        </div>
+        <div className="mx-auto w-full max-w-[560px]">
+          <ImportFlowPanel />
+        </div>
+      </section>
+
+      <section className="onward-section grid snap-start items-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-12">
+        <div className="mx-auto w-full max-w-[560px]">
+          <DayContextPanel />
+        </div>
+        <div className="mx-auto w-full max-w-[480px]">
+          <p className="mb-3 text-[12px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Travel day</p>
+          <h2 className="text-[34px] font-black leading-[1.06] text-[#080A0A] sm:text-[48px]">
+            Calm when the plan changes.
+          </h2>
+          <p className="mt-5 text-[16px] font-bold leading-7 text-[#68757B]">
+            The app keeps live context close to the Journey: leave-by prompts, saved tickets, document access, and clear review states.
+          </p>
+        </div>
+      </section>
+
+      <section className="onward-section grid snap-start items-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12">
+        <div className="mx-auto w-full max-w-[500px]">
+          <p className="mb-3 text-[12px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Trust</p>
+          <h2 className="text-[34px] font-black leading-[1.06] text-[#080A0A] sm:text-[48px]">
+            Useful under pressure. Plain about data.
+          </h2>
+          <p className="mt-5 text-[16px] font-bold leading-7 text-[#080A0A]/70">
+            Reservation help stays practical: clear permissions, attached documents, and shared context without murky data promises.
+          </p>
+          <button
+            type="button"
+            onClick={onOpenScreens}
+            className="mt-8 flex h-12 items-center justify-center gap-2 rounded-full bg-[#080A0A] px-6 text-[15px] font-black text-white transition-transform hover:-translate-y-0.5"
+          >
+            Open screen library
+            <ArrowRight size={17} />
+          </button>
+        </div>
+        <div className="mx-auto w-full max-w-[560px]">
+          <div className="grid gap-4">
+            {APP_TRUST_POINTS.map((item, index) => (
+              <div
+                key={item.copy}
+                className="onward-reveal flex items-center gap-4 rounded-[28px] border-2 border-[#080A0A] p-4 shadow-[6px_6px_0_rgba(8,10,10,0.12)] sm:p-5"
+                style={{ background: APP_FLOW_COLORS[index % APP_FLOW_COLORS.length] }}
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] bg-[#080A0A] text-white">
+                  {item.icon}
+                </span>
+                <p className="text-[15px] font-black leading-6 text-[#080A0A] sm:text-[18px]">{item.copy}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t-2 border-[#080A0A] bg-[#080A0A] px-5 py-8 text-[#F8FAF8] sm:px-8 lg:px-12">
+        <div className="mx-auto grid max-w-[1320px] gap-6 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <p
+              className="text-[34px] leading-none text-[#F6EDC9]"
+              style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
+            >
+              Onward
+            </p>
+            <p className="mt-3 max-w-[560px] text-[15px] font-bold leading-6 text-white/70">
+              A Journey-first travel organiser for reservations, documents, reminders, reviews, and live travel context.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 md:justify-end">
+            {["Journey Timeline", "Import review", "Travel day", "Trust"].map((item, index) => (
+              <span
+                key={item}
+                className="rounded-full border-2 border-[#080A0A] px-4 py-2 text-[12px] font-black text-[#080A0A]"
+                style={{ background: APP_CARD_COLORS[index % APP_CARD_COLORS.length] }}
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      </footer>
+    </main>
+  );
+}
+
+function PhoneFrame({ screen, isOnboarding, children, onTab, onNav }: {
+  screen: Screen;
+  isOnboarding: boolean;
+  children: React.ReactNode;
+  onTab: (tab: Tab) => void;
+  onNav: (screen: Screen) => void;
+}) {
+  return (
+    <div className="relative flex min-h-[884px] items-center justify-center px-4 py-5">
+      <div
+        className="relative flex flex-col overflow-hidden bg-background"
+        style={{
+          width: 390, height: 844, borderRadius: 52,
+          boxShadow: "0 50px 100px rgba(0,0,0,0.32), 0 20px 40px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.18), inset 0 0 0 2px rgba(0,0,0,0.12)",
+          fontFamily: "'Figtree', sans-serif",
+        }}
+      >
+        <div className="absolute left-1/2 top-0 z-50 bg-black" style={{ transform: "translateX(-50%)", width: 120, height: 34, borderRadius: "0 0 22px 22px" }} />
+        <StatusBar />
+        <div className="relative flex-1 overflow-hidden">{children}</div>
+        {!isOnboarding && <TabBar active={TAB_FOR_SCREEN[screen]} onTab={onTab} />}
+      </div>
+
+      {isOnboarding && (
+        <div className="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 gap-3 rounded-full bg-black/60 px-4 py-2 backdrop-blur lg:hidden" style={{ fontFamily: "'Figtree', sans-serif" }}>
+          {(["welcome", "scan-results"] as Screen[]).map((quickScreen) => (
+            <button key={quickScreen} onClick={() => onNav(quickScreen)} className="text-[11px] text-white/70 hover:text-white">
+              {quickScreen === "welcome" ? "Welcome" : "Results"}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ScreensPage({ screen, activeGroup, onGroupChange, onNav, isOnboarding, children, onTab }: {
+  screen: Screen;
+  activeGroup: ScreenGroupId;
+  onGroupChange: (group: ScreenGroupId) => void;
+  onNav: (screen: Screen) => void;
+  isOnboarding: boolean;
+  children: React.ReactNode;
+  onTab: (tab: Tab) => void;
+}) {
+  const visibleSections = getSidebarSections(activeGroup);
+
+  return (
+    <main className="min-h-[calc(100vh-72px)] bg-[#EEF3F1]">
+      <section className="mx-auto flex max-w-[1440px] flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8">
+        <div className="rounded-lg border border-[#DDE4E3] bg-white p-4 shadow-sm">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+            <div>
+              <p className="text-[13px] font-bold text-[#68757B]">Screen library</p>
+              <h1
+                className="mt-1 text-[34px] leading-tight text-[#153E4A]"
+                style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
+              >
+                Explore every Onward concept screen.
+              </h1>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {SCREEN_GROUPS.map((group) => (
+                <button
+                  key={group.id}
+                  type="button"
+                  onClick={() => onGroupChange(group.id)}
+                  className={cn(
+                    "h-10 rounded-md px-4 text-[13px] font-bold transition-colors",
+                    activeGroup === group.id ? "bg-[#153E4A] text-white" : "bg-[#F5F7F6] text-[#68757B] hover:bg-[#EEEAE1] hover:text-[#153E4A]"
+                  )}
+                >
+                  {group.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid min-h-[884px] gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
+          <aside className="hidden rounded-lg border border-[#DDE4E3] bg-white p-4 shadow-sm lg:block">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[13px] font-bold text-[#153E4A]">Catalogue</p>
+                <p className="text-[12px] font-semibold text-[#68757B]">{visibleSections.length} groups</p>
+              </div>
+              <span className="rounded-md bg-[#EEEAE1] px-2 py-1 text-[12px] font-bold text-[#153E4A]">{SCREEN_COUNT}</span>
+            </div>
+            <div className="flex max-h-[780px] flex-col gap-1 overflow-y-auto pr-1" style={{ scrollbarWidth: "none" }}>
+              {visibleSections.map((section) => (
+                <div key={section.title} className="pt-2">
+                  <p className="mb-1 px-2 text-[10px] font-bold uppercase text-[#68757B]">{section.title}</p>
+                  {section.items.map((item) => (
+                    <button
+                      key={item.screen}
+                      type="button"
+                      onClick={() => onNav(item.screen)}
+                      className={cn(
+                        "mb-1 block w-full rounded-md px-2 py-2 text-left text-[12px] font-semibold transition-colors",
+                        screen === item.screen ? "bg-[#153E4A] text-white" : "text-[#172126]/75 hover:bg-[#F5F7F6] hover:text-[#153E4A]"
+                      )}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </aside>
+
+          <div className="overflow-x-auto rounded-lg border border-[#DDE4E3] bg-[#F5F7F6] shadow-sm">
+            <PhoneFrame screen={screen} isOnboarding={isOnboarding} onTab={onTab} onNav={onNav}>
+              {children}
+            </PhoneFrame>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 
 export default function App() {
+  const [surface, setSurface] = useState<Surface>("home");
+  const [activeScreenGroup, setActiveScreenGroup] = useState<ScreenGroupId>("all");
   const [screen, setScreen] = useState<Screen>("launch");
   const [journeyFormMode, setJourneyFormMode] = useState<"add" | "edit">("add");
 
@@ -775,6 +1595,18 @@ export default function App() {
   ].includes(screen);
 
   function nav(s: Screen) { setScreen(s); }
+
+  function handleSurfaceChange(nextSurface: Surface) {
+    setSurface(nextSurface);
+  }
+
+  function handleScreenGroupChange(group: ScreenGroupId) {
+    setActiveScreenGroup(group);
+    if (group !== "all" && !isScreenInGroup(screen, group)) {
+      const firstScreen = getSidebarSections(group)[0]?.items[0]?.screen;
+      if (firstScreen) nav(firstScreen);
+    }
+  }
 
   function handleTab(t: Tab) {
     if (t === "timeline") nav("journey-timeline");
@@ -1119,44 +1951,22 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "linear-gradient(160deg, #F5F7F6 0%, #DDE4E3 54%, #BDE3DC 100%)" }}>
-      {/* Sidebar nav */}
-      <div className="hidden lg:flex flex-col gap-1 mr-6 text-[#68757B] text-[11px] font-medium overflow-y-auto" style={{ fontFamily: "'Figtree', sans-serif", maxHeight: "90vh", scrollbarWidth: "none" }}>
-        <p className="text-[#153E4A] font-bold mb-1 text-[12px] uppercase tracking-widest">Screens</p>
-        {SIDEBAR.map(([s, label], idx) =>
-          s === null ? (
-            <p key={idx} className="text-[#68757B] text-[9px] font-bold uppercase tracking-widest mt-2 mb-0.5 px-3">{label}</p>
-          ) : (
-            <button key={s} onClick={() => nav(s)} className={cn("text-left px-3 py-1.5 rounded-lg transition-colors", screen === s ? "bg-white/70 text-[#153E4A] shadow-sm" : "text-[#172126]/75 hover:bg-white/45 hover:text-[#153E4A]")}>
-              {label}
-            </button>
-          )
-        )}
-      </div>
+    <div className="min-h-screen bg-[#F5F7F6]" style={{ fontFamily: "'Figtree', sans-serif" }}>
+      <AppNav surface={surface} onSurfaceChange={handleSurfaceChange} />
 
-      {/* Phone frame */}
-      <div
-        className="relative flex flex-col bg-background overflow-hidden flex-shrink-0"
-        style={{
-          width: 390, height: 844, borderRadius: 52,
-          boxShadow: "0 50px 100px rgba(0,0,0,0.4), 0 20px 40px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.18), inset 0 0 0 2px rgba(0,0,0,0.12)",
-          fontFamily: "'Figtree', sans-serif",
-        }}
-      >
-        <div className="absolute top-0 left-1/2 z-50 bg-black" style={{ transform: "translateX(-50%)", width: 120, height: 34, borderRadius: "0 0 22px 22px" }} />
-        <StatusBar />
-        <div className="flex-1 overflow-hidden relative">{renderScreen()}</div>
-        {!isOnboarding && <TabBar active={TAB_FOR_SCREEN[screen]} onTab={handleTab} />}
-      </div>
-
-      {isOnboarding && (
-        <div className="lg:hidden fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur rounded-full px-4 py-2 flex gap-3" style={{ fontFamily: "'Figtree', sans-serif" }}>
-          {(["welcome", "scan-results"] as Screen[]).map((s) => (
-            <button key={s} onClick={() => nav(s)} className="text-white/70 text-[11px] hover:text-white">
-              {s === "welcome" ? "Welcome" : "Results"}
-            </button>
-          ))}
-        </div>
+      {surface === "home" ? (
+        <PresentationHome onOpenScreens={() => setSurface("screens")} />
+      ) : (
+        <ScreensPage
+          screen={screen}
+          activeGroup={activeScreenGroup}
+          onGroupChange={handleScreenGroupChange}
+          onNav={nav}
+          isOnboarding={isOnboarding}
+          onTab={handleTab}
+        >
+          {renderScreen()}
+        </ScreensPage>
       )}
     </div>
   );
