@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowRight, Bell, Brain, CalendarClock,
   ChevronDown, Clock, Compass, MailCheck, MapPin,
@@ -46,6 +46,10 @@ import {
   ReadinessCompleteScreen, NoConflictsScreen, NoSharedLinksScreen,
   MicrosoftReauthScreen, ForwardingAddressErrorScreen, OfflineDownloadErrorScreen,
 } from "./phase2";
+
+import artboardOne from "../../Artboard 1.png";
+import artboardTwo from "../../Artboard 2.png";
+import artboardThree from "../../Artboard 3.png";
 import {
   LiveJourneyHomeScreen, LiveStatusCentreScreen, FlightLiveStatusScreen,
   GroundTransportLiveStatusScreen, DisruptionAlertScreen, CancellationDetailScreen,
@@ -1108,6 +1112,52 @@ function JourneyArtwork() {
   );
 }
 
+function HeroImageCarousel() {
+  const slides = [
+    {
+      src: artboardOne,
+      alt: "Artboard 1 showing a traveller at an airport with a suitcase and phone.",
+    },
+    {
+      src: artboardTwo,
+      alt: "Artboard 2 showing a traveller seated on a plane with headphones and a coffee.",
+    },
+    {
+      src: artboardThree,
+      alt: "Artboard 3 showing a traveller standing in a gallery holding a phone.",
+    },
+  ];
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % slides.length);
+    }, 2800);
+
+    return () => window.clearInterval(intervalId);
+  }, [slides.length]);
+
+  return (
+    <div className="relative h-full w-full overflow-hidden">
+      {slides.map((slide, index) => (
+        <img
+          key={slide.src}
+          src={slide.src}
+          alt={slide.alt}
+          className={cn(
+            "absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ease-out",
+            index === activeSlide ? "opacity-100" : "opacity-0"
+          )}
+          style={{
+            maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function JourneyContextRows() {
   return (
     <div className="grid gap-4">
@@ -1270,7 +1320,13 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
           <JourneyArtwork />
         </div>
 
-        <div className="hidden w-full overflow-hidden lg:flex lg:h-[calc(100svh-75px)] lg:flex-col lg:items-center lg:gap-14 lg:pb-4 lg:pt-24">
+        <div className="hidden w-full overflow-hidden lg:flex lg:h-[calc(100svh-75px)] lg:flex-col lg:items-center lg:gap-10 lg:pb-4 lg:pt-16">
+          <div className="min-h-0 w-full flex-1 px-16">
+            <div className="relative h-full w-full">
+              <HeroImageCarousel />
+            </div>
+          </div>
+
           <div className="mx-auto flex w-full max-w-[720px] shrink-0 flex-col items-center px-12 text-center">
             <h1 className="text-[46px] font-black leading-[1.04] text-[#080A0A] xl:text-[56px]">
               Every step of the journey,{" "}
@@ -1287,20 +1343,6 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 See the Journey
                 <ArrowRight size={17} />
               </a>
-            </div>
-          </div>
-
-          <div className="min-h-0 w-full flex-1 px-16">
-            <div className="relative h-full w-full">
-              <img
-                src="/hero-travel-illustration.png"
-                alt="Illustration of a traveller moving through a trip: arriving at the airport, boarding a flight, visiting a museum, hiking, exploring a city, and relaxing at a cafe."
-                className="absolute inset-0 h-full w-full object-cover object-center"
-                style={{
-                  maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-                  WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-                }}
-              />
             </div>
           </div>
         </div>
