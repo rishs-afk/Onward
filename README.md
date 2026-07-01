@@ -1,11 +1,12 @@
 
-  # Build app screens
+# Onward App
 
-  This is a code bundle for Build app screens. The original project is available at https://www.figma.com/design/czQytCoqPYq2z3gKopj5TX/Build-app-screens.
+Onward is a travel planning app prototype that turns reservations into clear Journey timelines.
 
-  ## Running the code
+## Running The Code
 
-  Run `npm i` to install the dependencies.
+Run `pnpm install` to install the dependencies.
 
-  Run `npm run dev` to start the development server.
-  
+Run `pnpm dev --host 127.0.0.1` to start the local development server.
+
+Open [http://127.0.0.1:5173/](http://127.0.0.1:5173/) to preview the app locally.
