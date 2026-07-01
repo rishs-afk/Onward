@@ -1121,13 +1121,13 @@ export default function App() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "linear-gradient(160deg, #F5F7F6 0%, #DDE4E3 54%, #BDE3DC 100%)" }}>
       {/* Sidebar nav */}
-      <div className="hidden lg:flex flex-col gap-1 mr-6 text-white/60 text-[11px] font-medium overflow-y-auto" style={{ fontFamily: "'Figtree', sans-serif", maxHeight: "90vh", scrollbarWidth: "none" }}>
-        <p className="text-white/80 font-bold mb-1 text-[12px] uppercase tracking-widest">Screens</p>
+      <div className="hidden lg:flex flex-col gap-1 mr-6 text-[#68757B] text-[11px] font-medium overflow-y-auto" style={{ fontFamily: "'Figtree', sans-serif", maxHeight: "90vh", scrollbarWidth: "none" }}>
+        <p className="text-[#153E4A] font-bold mb-1 text-[12px] uppercase tracking-widest">Screens</p>
         {SIDEBAR.map(([s, label], idx) =>
           s === null ? (
-            <p key={idx} className="text-white/30 text-[9px] font-bold uppercase tracking-widest mt-2 mb-0.5 px-3">{label}</p>
+            <p key={idx} className="text-[#68757B] text-[9px] font-bold uppercase tracking-widest mt-2 mb-0.5 px-3">{label}</p>
           ) : (
-            <button key={s} onClick={() => nav(s)} className={cn("text-left px-3 py-1.5 rounded-lg transition-colors", screen === s ? "bg-white/20 text-white" : "hover:bg-white/10 hover:text-white/80")}>
+            <button key={s} onClick={() => nav(s)} className={cn("text-left px-3 py-1.5 rounded-lg transition-colors", screen === s ? "bg-white/70 text-[#153E4A] shadow-sm" : "text-[#172126]/75 hover:bg-white/45 hover:text-[#153E4A]")}>
               {label}
             </button>
           )
