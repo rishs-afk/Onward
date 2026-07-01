@@ -3789,9 +3789,9 @@ export function AboutOnwardScreen({ onBack }: { onBack: () => void }) {
 export function LaunchScreen({ onDone }: { onDone: () => void }) {
   const [step, setStep] = useState(0);
   const steps = [
-    "Checking your account…",
-    "Loading your journeys…",
-    "Syncing reservations…",
+    "Preparing your account…",
+    "Loading your Journeys…",
+    "Checking reservations…",
     "Almost ready…",
   ];
 
@@ -3806,22 +3806,23 @@ export function LaunchScreen({ onDone }: { onDone: () => void }) {
   return (
     <div
       className="flex flex-col h-full items-center justify-center"
-      style={{ background: "#1C2B3A", fontFamily: "'Figtree', sans-serif" }}
+      style={{ background: "#F5F7F6", fontFamily: "'Figtree', sans-serif" }}
     >
       <div className="flex flex-col items-center text-center px-8">
-        <div className="w-[72px] h-[72px] rounded-[22px] bg-white/10 flex items-center justify-center mb-8 shadow-lg">
-          <Plane size={30} className="text-white" style={{ transform: "rotate(-15deg)" }} />
+        <div className="w-[82px] h-[82px] rounded-[26px] bg-white border border-[#DDE4E3] flex items-center justify-center mb-8 shadow-[0_18px_45px_rgba(21,62,74,0.12)]">
+          <div className="w-[58px] h-[58px] rounded-[20px] bg-[#BDE3DC] flex items-center justify-center">
+            <Plane size={28} className="text-[#153E4A]" style={{ transform: "rotate(-15deg)" }} />
+          </div>
         </div>
 
         <h1
-          className="text-[38px] leading-none tracking-tight text-white mb-1"
+          className="text-[40px] leading-none tracking-tight text-[#153E4A] mb-2"
           style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
         >
           Onward
         </h1>
-        <p className="text-white/40 text-[14px] mb-14">Your journeys, organised.</p>
+        <p className="text-[#68757B] text-[14px] font-medium mb-14">Your Journeys, organised.</p>
 
-        {/* Animated dots */}
         <div className="flex items-center gap-1.5 mb-5">
           {steps.map((_, i) => (
             <div
@@ -3830,13 +3831,13 @@ export function LaunchScreen({ onDone }: { onDone: () => void }) {
               style={{
                 width: i === step ? 24 : 6,
                 height: 6,
-                background: i <= step ? "rgba(224,123,90,1)" : "rgba(255,255,255,0.15)",
+                background: i <= step ? "#1E7A78" : "#DDE4E3",
               }}
             />
           ))}
         </div>
 
-        <p className="text-[13px] text-white/50 h-5 transition-all duration-300">
+        <p className="text-[13px] text-[#68757B] h-5 transition-all duration-300">
           {steps[step] ?? ""}
         </p>
       </div>

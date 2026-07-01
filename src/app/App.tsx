@@ -769,7 +769,7 @@ export default function App() {
   const [journeyFormMode, setJourneyFormMode] = useState<"add" | "edit">("add");
 
   const isOnboarding = [
-    "welcome", "how-it-works", "import-reservations",
+    "launch", "welcome", "how-it-works", "import-reservations",
     "connect-gmail-primer", "gmail-connected", "choose-scan-range",
     "scan-progress", "scan-results",
   ].includes(screen);
@@ -1119,7 +1119,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "linear-gradient(160deg, #C4C0B8 0%, #ADAAA4 100%)" }}>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "linear-gradient(160deg, #F5F7F6 0%, #DDE4E3 54%, #BDE3DC 100%)" }}>
       {/* Sidebar nav */}
       <div className="hidden lg:flex flex-col gap-1 mr-6 text-white/60 text-[11px] font-medium overflow-y-auto" style={{ fontFamily: "'Figtree', sans-serif", maxHeight: "90vh", scrollbarWidth: "none" }}>
         <p className="text-white/80 font-bold mb-1 text-[12px] uppercase tracking-widest">Screens</p>

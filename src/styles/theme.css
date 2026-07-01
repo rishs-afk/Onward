@@ -2,43 +2,45 @@
 
 :root {
   --font-size: 16px;
-  --background: #F8F5F0;
-  --foreground: #1A1916;
+  --brand: #153E4A;
+  --seafoam: #BDE3DC;
+  --background: #F5F7F6;
+  --foreground: #172126;
   --card: #FFFFFF;
-  --card-foreground: #1A1916;
+  --card-foreground: #172126;
   --popover: #FFFFFF;
-  --popover-foreground: #1A1916;
-  --primary: #1C2B3A;
+  --popover-foreground: #172126;
+  --primary: #1E7A78;
   --primary-foreground: #FFFFFF;
-  --secondary: #EDE9E3;
-  --secondary-foreground: #1A1916;
-  --muted: #EDE9E3;
-  --muted-foreground: #8A8278;
-  --accent: #E07B5A;
+  --secondary: #EEEAE1;
+  --secondary-foreground: #172126;
+  --muted: #EEEAE1;
+  --muted-foreground: #68757B;
+  --accent: #F2765E;
   --accent-foreground: #FFFFFF;
   --destructive: #D4183D;
   --destructive-foreground: #FFFFFF;
-  --border: rgba(26, 25, 22, 0.09);
+  --border: #DDE4E3;
   --input: transparent;
-  --input-background: #EDE9E3;
-  --switch-background: #C8C4BC;
+  --input-background: #EEEAE1;
+  --switch-background: #DDE4E3;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #1C2B3A;
+  --ring: #1E7A78;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 1rem;
-  --sidebar: #F8F5F0;
-  --sidebar-foreground: #1A1916;
-  --sidebar-primary: #1C2B3A;
+  --sidebar: #F5F7F6;
+  --sidebar-foreground: #172126;
+  --sidebar-primary: #1E7A78;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #EDE9E3;
-  --sidebar-accent-foreground: #1A1916;
-  --sidebar-border: rgba(26, 25, 22, 0.09);
-  --sidebar-ring: #1C2B3A;
+  --sidebar-accent: #EEEAE1;
+  --sidebar-accent-foreground: #172126;
+  --sidebar-border: #DDE4E3;
+  --sidebar-ring: #1E7A78;
 }
 
 .dark {
@@ -81,6 +83,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-seafoam: var(--seafoam);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
