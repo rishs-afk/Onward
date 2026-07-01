@@ -1321,18 +1321,12 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
         </div>
 
         <div className="hidden w-full overflow-hidden lg:flex lg:h-[calc(100svh-75px)] lg:flex-col lg:items-center lg:gap-10 lg:pb-4 lg:pt-16">
-          <div className="min-h-0 w-full flex-1 px-16">
-            <div className="relative h-full w-full">
-              <HeroImageCarousel />
-            </div>
-          </div>
-
           <div className="mx-auto flex w-full max-w-[720px] shrink-0 flex-col items-center px-12 text-center">
             <h1 className="text-[46px] font-black leading-[1.04] text-[#080A0A] xl:text-[56px]">
               Every step of the journey,{" "}
               <span style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>calmly organised</span>.
             </h1>
-            <p className="mt-6 max-w-[520px] text-[19px] font-normal leading-7 text-[#68757B]">
+            <p className="max-w-[520px] text-[19px] font-normal leading-7 text-[#68757B]">
               From the flight to the last cup of coffee, your plans, documents, and next moves stay clear and ready, wherever the trip takes you.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -1343,6 +1337,12 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 See the Journey
                 <ArrowRight size={17} />
               </a>
+            </div>
+          </div>
+
+          <div className="min-h-0 w-full flex-1 px-16">
+            <div className="relative h-full w-full">
+              <HeroImageCarousel />
             </div>
           </div>
         </div>
