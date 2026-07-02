@@ -1435,18 +1435,18 @@ function ActivityCardCluster({ indices, className, routeLine }: {
       {routeLine && (
         <svg
           className="timeline-route-line"
-          viewBox="0 0 1000 120"
+          viewBox="0 0 1360 411"
           preserveAspectRatio="none"
           aria-hidden="true"
         >
           <path
-            d="M125,104 Q250,20 375,158 Q500,20 625,104 Q750,20 875,158"
+            d="M135,151 C318,151 318,194 501,194 C680,194 680,151 859,151 C1042,151 1042,194 1225,194"
             fill="none"
             stroke="#080A0A"
-            strokeOpacity="0.45"
-            strokeWidth="3"
+            strokeOpacity="0.5"
+            strokeWidth="5"
             strokeLinecap="round"
-            strokeDasharray="0.5 15"
+            strokeDasharray="1 20"
           />
         </svg>
       )}
