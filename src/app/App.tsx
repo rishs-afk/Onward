@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ArrowRight, Bell, Brain, CalendarClock,
   ChevronDown, Clock, Compass, MailCheck, MapPin,
@@ -47,9 +47,6 @@ import {
   MicrosoftReauthScreen, ForwardingAddressErrorScreen, OfflineDownloadErrorScreen,
 } from "./phase2";
 
-import artboardOne from "../../Artboard 1.png";
-import artboardTwo from "../../Artboard 2.png";
-import artboardThree from "../../Artboard 3.png";
 import {
   LiveJourneyHomeScreen, LiveStatusCentreScreen, FlightLiveStatusScreen,
   GroundTransportLiveStatusScreen, DisruptionAlertScreen, CancellationDetailScreen,
@@ -867,6 +864,44 @@ const APP_TRUST_POINTS = [
 
 const APP_CARD_COLORS = ["#F17455", "#F5D64A", "#A9C8F0", "#8CCFBD"];
 const APP_FLOW_COLORS = ["#A9C8F0", "#F5D64A", "#F17455", "#8CCFBD"];
+const ACTIVITY_IMAGE_MODULES = import.meta.glob("../../Images/*.{png,jpg,jpeg,webp}", {
+  eager: true,
+  import: "default",
+}) as Record<string, string>;
+
+const ACTIVITY_IMAGES = Object.entries(ACTIVITY_IMAGE_MODULES)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([path, src]) => ({
+    src,
+    name: path.split("/").pop()?.replace(/\.[^.]+$/, "") ?? "Journey activity",
+  }));
+
+const LANDING_ACTIVITIES = [
+  { label: "Airport", title: "Boarding pass ready", detail: "Terminal and gate updates saved", icon: <Compass size={22} />, progress: "58%" },
+  { label: "Flight", title: "Flight details synced", detail: "Seat, times, and documents offline", icon: <Wifi size={22} />, progress: "72%" },
+  { label: "Rail", title: "Train ticket imported", detail: "Platform alert and leave-by time set", icon: <Train size={22} />, progress: "70%" },
+  { label: "Seat", title: "Rail leg organised", detail: "Coach, seat, and delay alerts grouped", icon: <Train size={22} />, progress: "64%" },
+  { label: "Ticket", title: "Museum pass attached", detail: "Timed entry and QR saved offline", icon: <FileText size={22} />, progress: "46%" },
+  { label: "Route", title: "Trail plan stored", detail: "Start point, weather, and notes linked", icon: <Route size={22} />, progress: "52%" },
+  { label: "Map", title: "Saved places grouped", detail: "Photo stops added to the Journey map", icon: <Compass size={22} />, progress: "60%" },
+  { label: "Review", title: "Plans ready to scan", detail: "Next moves and documents in one place", icon: <Clock size={22} />, progress: "40%" },
+  { label: "Stay", title: "Hotel check-in ready", detail: "Booking ref and address attached", icon: <Hotel size={22} />, progress: "44%" },
+  { label: "Rental", title: "Bike pickup confirmed", detail: "Depot, return time, and deposit note", icon: <Route size={22} />, progress: "50%" },
+  { label: "Local", title: "Market note pinned", detail: "Wishlist, cash reminder, and address", icon: <UtensilsCrossed size={22} />, progress: "48%" },
+  { label: "Ferry", title: "Ferry ticket ready", detail: "Pier map and boarding window saved", icon: <Compass size={22} />, progress: "66%" },
+  { label: "Weather", title: "Coast plan checked", detail: "Forecast, tide, and sun notes ready", icon: <MapPin size={22} />, progress: "62%" },
+  { label: "Route", title: "Next stop selected", detail: "Landmarks and directions available offline", icon: <MapPin size={22} />, progress: "36%" },
+  { label: "Pack", title: "Packing list updated", detail: "Outfits, chargers, and documents checked", icon: <FileText size={22} />, progress: "76%" },
+  { label: "Table", title: "Reservation confirmed", detail: "Address, time, and booking note saved", icon: <UtensilsCrossed size={22} />, progress: "56%" },
+  { label: "Pinned", title: "Viewpoint saved", detail: "Opening hours and route from stay linked", icon: <Compass size={22} />, progress: "54%" },
+  { label: "Transit", title: "Tram stop alert set", detail: "Line, stop, and ticket kept together", icon: <Train size={22} />, progress: "68%" },
+  { label: "Saved", title: "Bookshop note added", detail: "Hours, address, and wish list attached", icon: <FileText size={22} />, progress: "42%" },
+  { label: "Open", title: "Free time protected", detail: "A quiet block held in the timeline", icon: <FileText size={22} />, progress: "38%" },
+  { label: "Pier", title: "Harbor transfer ready", detail: "Pickup point and bag note saved", icon: <Compass size={22} />, progress: "58%" },
+  { label: "Nearby", title: "Food stop saved", detail: "Walking route and payment note attached", icon: <UtensilsCrossed size={22} />, progress: "52%" },
+  { label: "Reminder", title: "Day bag checklist", detail: "Water, layers, snacks, and tickets", icon: <Clock size={22} />, progress: "46%" },
+  { label: "Entry", title: "Garden tickets saved", detail: "Timed entry and map attached", icon: <MapPin size={22} />, progress: "34%" },
+];
 
 const SCREEN_GROUPS: {
   id: ScreenGroupId;
@@ -949,14 +984,15 @@ function AppNav({ surface, onSurfaceChange }: {
   surface: Surface;
   onSurfaceChange: (surface: Surface) => void;
 }) {
-  const tabs: { id: Surface; label: string; icon: React.ReactNode }[] = [
+  const tabs: { id: Surface | "investors"; label: string; icon: React.ReactNode }[] = [
     { id: "home", label: "Home", icon: <Compass size={17} /> },
     { id: "screens", label: "Screens", icon: <MonitorSmartphone size={17} /> },
+    { id: "investors", label: "For Investors", icon: <Brain size={17} /> },
   ];
 
   return (
     <header className="sticky top-0 z-50 border-b-2 border-[#080A0A] bg-[#F9EFD1]">
-      <div className="mx-auto flex min-h-[72px] w-full max-w-[1440px] flex-nowrap items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-h-[92px] w-full max-w-[1440px] flex-nowrap items-center justify-between gap-2 px-3 py-5 sm:gap-4 sm:px-6 lg:px-8">
         <button
           type="button"
           onClick={() => onSurfaceChange("home")}
@@ -975,7 +1011,7 @@ function AppNav({ surface, onSurfaceChange }: {
             <button
               key={tab.id}
               type="button"
-              onClick={() => onSurfaceChange(tab.id)}
+              onClick={() => { if (tab.id !== "investors") onSurfaceChange(tab.id); }}
               className={cn(
                 "flex h-10 items-center gap-2 rounded-full px-3 text-[14px] font-bold transition-colors sm:px-4",
                 surface === tab.id ? "bg-[#080A0A] text-white" : "text-[#080A0A] hover:bg-[#F5D64A]"
@@ -999,21 +1035,8 @@ function JourneyArtwork() {
   ];
 
   return (
-    <div className="relative mx-auto flex w-full max-w-[360px] flex-col items-center gap-5 sm:block sm:max-w-[540px] sm:min-h-[620px] lg:min-h-[700px]">
-      <svg className="absolute inset-0 hidden h-full w-full sm:block" viewBox="0 0 540 700" aria-hidden="true">
-        <path className="onward-route-line" d="M40 560 L120 560 L120 340 L300 340 L300 120" />
-        <path className="onward-route-line onward-route-line-secondary" d="M300 120 C360 170 400 210 440 260" />
-        {[
-          [120, 560, "#F17455"],
-          [120, 340, "#080A0A"],
-          [300, 340, "#F5D64A"],
-          [300, 120, "#080A0A"],
-        ].map(([cx, cy, fill], index) => (
-          <circle key={index} className="onward-waypoint" cx={cx} cy={cy} r="7" fill={fill as string} />
-        ))}
-      </svg>
-
-      <div className="relative z-10 w-[264px] sm:absolute sm:right-[4%] sm:top-4 sm:w-[268px] lg:w-[282px]">
+    <div className="relative mx-auto flex w-full max-w-[360px] flex-col items-center gap-5 sm:block sm:max-w-[680px] sm:min-h-[640px] lg:min-h-[680px]">
+      <div className="relative z-10 w-[290px] sm:absolute sm:right-[22%] sm:top-6 sm:w-[312px] lg:right-[24%] lg:w-[325px]">
         <div className="onward-phone-shell aspect-[0.52/1]">
           <div className="onward-phone-screen px-4 pb-20 pt-12 sm:px-5 sm:pt-14">
             <div className="onward-phone-island" />
@@ -1069,91 +1092,101 @@ function JourneyArtwork() {
         </div>
       </div>
 
-      <div className="onward-floating-card onward-reference-card relative z-20 w-full max-w-[300px] p-3.5 sm:absolute sm:left-0 sm:top-0 sm:w-[224px] sm:max-w-none sm:-rotate-[4deg]" style={{ background: "#F17455" }}>
+      <div className="onward-floating-card onward-reference-card relative z-20 w-full max-w-[300px] p-3.5 sm:absolute sm:-left-[9%] sm:top-[8%] sm:w-[26%] sm:max-w-none sm:-rotate-[3deg] 2xl:-left-[8%] 2xl:w-[32%]" style={{ background: "#F17455" }}>
         <div className="flex items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] bg-[#080A0A] text-white">
             <FileText size={16} />
           </span>
           <div>
             <p className="text-[13px] font-black leading-tight text-[#080A0A]">Boarding pass ready</p>
-            <p className="mt-0.5 text-[11px] font-bold text-[#080A0A]/70">Saved for offline access</p>
+            <p className="mt-0 text-[11px] font-bold text-[#080A0A]/70">Saved for offline access</p>
           </div>
         </div>
       </div>
 
-      <div className="onward-floating-card onward-reference-card relative z-20 w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[46%] sm:w-[236px] sm:max-w-none sm:rotate-[5deg]" style={{ background: "#A9C8F0" }}>
-        <div className="mb-2 flex items-center justify-between">
-          <div className="flex -space-x-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#080A0A] bg-[#F6EDC9] text-[10px] font-black text-[#080A0A]">M</span>
-            <span className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#080A0A] bg-[#8CCFBD] text-[10px] font-black text-[#080A0A]">J</span>
-          </div>
-          <Users size={16} className="text-[#080A0A]/60" />
-        </div>
-        <p className="text-[13px] font-black leading-tight text-[#080A0A]">Shared with Maria & Jono</p>
-        <p className="mt-0.5 text-[11px] font-bold text-[#080A0A]/70">Both can see this Journey</p>
-      </div>
-
-      <div className="onward-floating-card onward-reference-card relative z-30 w-full max-w-[320px] p-4 sm:absolute sm:bottom-0 sm:left-4 sm:w-[320px] sm:max-w-none sm:rotate-[-2deg]" style={{ background: "#F5D64A" }}>
-        <div className="mb-3 flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#080A0A]/65">Next</p>
-            <h3 className="mt-1 text-[18px] font-black leading-tight text-[#080A0A]">Leave for Rossio Station</h3>
-            <p className="mt-1 text-[12px] font-bold text-[#080A0A]/70">08:05 reminder · ticket saved offline</p>
-          </div>
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] bg-[#080A0A] text-white">
-            <Train size={18} />
+      <div className="onward-floating-card onward-reference-card relative z-20 hidden w-full max-w-[300px] p-3.5 sm:absolute sm:-left-[9%] sm:top-[32%] sm:block sm:w-[26%] sm:max-w-none sm:rotate-[2deg] 2xl:-left-[8%] 2xl:w-[32%]" style={{ background: "#8CCFBD" }}>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] bg-[#080A0A] text-white">
+            <MailCheck size={16} />
           </span>
-        </div>
-        <div className="h-2 overflow-hidden rounded-full border border-[#080A0A] bg-[#F8FAF8]">
-          <div className="onward-progress-fill h-full rounded-full bg-[#080A0A]" />
+          <div>
+            <p className="text-[13px] font-black leading-tight text-[#080A0A]">Inbox connected</p>
+            <p className="mt-0 text-[11px] font-bold text-[#080A0A]/70">Plans pulled into context</p>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-function HeroImageCarousel() {
-  const slides = [
-    {
-      src: artboardOne,
-      alt: "Artboard 1 showing a traveller at an airport with a suitcase and phone.",
-    },
-    {
-      src: artboardTwo,
-      alt: "Artboard 2 showing a traveller seated on a plane with headphones and a coffee.",
-    },
-    {
-      src: artboardThree,
-      alt: "Artboard 3 showing a traveller standing in a gallery holding a phone.",
-    },
-  ];
-  const [activeSlide, setActiveSlide] = useState(0);
+      <div className="onward-floating-card onward-reference-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:-right-[8%] sm:top-[12%] sm:block sm:w-[28%] sm:max-w-none sm:rotate-[-2deg] 2xl:-right-[12%] 2xl:w-[32%]" style={{ background: "#A9C8F0" }}>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] bg-[#080A0A] text-white">
+            <Compass size={16} />
+          </span>
+          <div>
+            <p className="text-[13px] font-black leading-tight text-[#080A0A]">Weather looks clear</p>
+            <p className="mt-0 text-[11px] font-bold text-[#080A0A]/70">Sunny in Lisbon today</p>
+          </div>
+        </div>
+      </div>
 
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      setActiveSlide((current) => (current + 1) % slides.length);
-    }, 2800);
+      <div className="onward-floating-card onward-reference-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:-right-[8%] sm:top-[36%] sm:block sm:w-[28%] sm:max-w-none sm:rotate-[3deg] 2xl:-right-[12%] 2xl:w-[32%]" style={{ background: "#F5D64A" }}>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] bg-[#080A0A] text-white">
+            <Bell size={16} />
+          </span>
+          <div>
+            <p className="text-[13px] font-black leading-tight text-[#080A0A]">Leave-by alert set</p>
+            <p className="mt-0 text-[11px] font-bold text-[#080A0A]/70">24 min to get moving</p>
+          </div>
+        </div>
+      </div>
 
-    return () => window.clearInterval(intervalId);
-  }, [slides.length]);
+      <div className="onward-floating-card onward-reference-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:-right-[8%] sm:top-[60%] sm:block sm:w-[28%] sm:max-w-none sm:-rotate-[3deg] 2xl:-right-[12%] 2xl:w-[32%]" style={{ background: "#F17455" }}>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] bg-[#080A0A] text-white">
+            <Hotel size={16} />
+          </span>
+          <div>
+            <p className="text-[13px] font-black leading-tight text-[#080A0A]">Check-in found</p>
+            <p className="mt-0 text-[11px] font-bold text-[#080A0A]/70">Address and ref attached</p>
+          </div>
+        </div>
+      </div>
 
-  return (
-    <div className="relative h-full w-full overflow-hidden">
-      {slides.map((slide, index) => (
-        <img
-          key={slide.src}
-          src={slide.src}
-          alt={slide.alt}
-          className={cn(
-            "absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ease-out",
-            index === activeSlide ? "opacity-100" : "opacity-0"
-          )}
-          style={{
-            maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-          }}
-        />
-      ))}
+      <div className="onward-floating-card onward-reference-card relative z-20 hidden w-full max-w-[300px] p-3.5 sm:absolute sm:-left-[9%] sm:top-[56%] sm:block sm:w-[26%] sm:max-w-none sm:rotate-[-2deg] 2xl:-left-[8%] 2xl:w-[32%]" style={{ background: "#8CCFBD" }}>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] bg-[#080A0A] text-white">
+            <Brain size={16} />
+          </span>
+          <div>
+            <p className="text-[13px] font-black leading-tight text-[#080A0A]">Assistant ready</p>
+            <p className="mt-0 text-[11px] font-bold text-[#080A0A]/70">Ask Onward anything</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="onward-floating-card onward-reference-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:-right-[8%] sm:top-[84%] sm:block sm:w-[28%] sm:max-w-none sm:rotate-[2deg] 2xl:-right-[12%] 2xl:w-[32%]" style={{ background: "#8CCFBD" }}>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] bg-[#080A0A] text-white">
+            <ShieldCheck size={16} />
+          </span>
+          <div>
+            <p className="text-[13px] font-black leading-tight text-[#080A0A]">Trip protected</p>
+            <p className="mt-0 text-[11px] font-bold text-[#080A0A]/70">Insurance active end to end</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="onward-floating-card onward-reference-card relative z-20 hidden w-full max-w-[300px] p-3.5 sm:absolute sm:-left-[9%] sm:top-[80%] sm:block sm:w-[26%] sm:max-w-none sm:rotate-[3deg] 2xl:-left-[8%] 2xl:w-[32%]" style={{ background: "#F5D64A" }}>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] bg-[#080A0A] text-white">
+            <Route size={16} />
+          </span>
+          <div>
+            <p className="text-[13px] font-black leading-tight text-[#080A0A]">Route optimised</p>
+            <p className="mt-0 text-[11px] font-bold text-[#080A0A]/70">Fastest path to the station</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1265,40 +1298,115 @@ function DayContextPanel() {
   );
 }
 
+function ActivityImageCard({ image, activity, index }: {
+  image: { src: string; name: string };
+  activity: typeof LANDING_ACTIVITIES[number];
+  index: number;
+}) {
+  const tilt = [-2.5, 1.6, -1.2, 2.2, -1.8, 1.1][index % 6];
+
+  return (
+    <article
+      className="activity-image-card"
+      style={{
+        "--activity-bg": APP_CARD_COLORS[index % APP_CARD_COLORS.length],
+        "--activity-progress": activity.progress,
+        "--activity-tilt": `${tilt}deg`,
+      } as React.CSSProperties}
+    >
+      <div className="activity-image-frame">
+        <img
+          src={image.src}
+          alt={`${activity.title} Journey scene`}
+          loading={index < 4 ? "eager" : "lazy"}
+          className="activity-image"
+        />
+      </div>
+      <div className="activity-overlay-card">
+        <div className="activity-overlay-top">
+          <div className="min-w-0">
+            <p className="activity-label">{activity.label}</p>
+            <h3>{activity.title}</h3>
+            <p className="activity-detail">{activity.detail}</p>
+          </div>
+          <span className="activity-icon">{activity.icon}</span>
+        </div>
+        <div className="activity-progress-track">
+          <span />
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function ActivityCardGroup({ start, count, className }: {
+  start: number;
+  count: number;
+  className?: string;
+}) {
+  const cards = ACTIVITY_IMAGES.slice(start, start + count).map((image, offset) => {
+    const index = start + offset;
+
+    return {
+      image,
+      activity: LANDING_ACTIVITIES[index % LANDING_ACTIVITIES.length],
+      index,
+    };
+  });
+
+  if (cards.length === 0) return null;
+
+  return (
+    <div
+      className={cn("activity-card-group", className)}
+      data-count={cards.length}
+    >
+      {cards.map(({ image, activity, index }) => (
+        <ActivityImageCard key={image.name} image={image} activity={activity} index={index} />
+      ))}
+    </div>
+  );
+}
+
 function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
   return (
     <main className="onward-landing text-[#080A0A]">
-      <section className="onward-section relative grid snap-start items-center gap-6 px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:block lg:bg-[#F9EFD1] lg:p-0">
-        <div className="mx-auto w-full max-w-[560px] lg:hidden">
+      <section className="onward-section relative grid snap-start items-center gap-9 overflow-hidden px-5 py-7 sm:gap-10 sm:px-8 sm:py-9 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12 lg:bg-[#F9EFD1] lg:px-12 xl:gap-16 xl:px-16">
+        <div className="relative z-10 mx-auto w-full max-w-[560px] lg:max-w-[780px] lg:justify-self-end">
           <p
-            className="mb-8 text-[42px] leading-none text-[#080A0A]"
+            className="mb-10 text-[48px] leading-none text-[#080A0A] lg:mb-12 lg:text-[64px]"
             style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
           >
             Onward
           </p>
-          <h1 className="max-w-[520px] text-[40px] font-black leading-[1.04] text-[#080A0A] sm:text-[56px] xl:text-[64px]">
-            Every step of the journey,{" "}
+          <h1 className="max-w-[780px] text-[40px] font-black leading-[1.04] text-[#080A0A] sm:text-[56px] min-[1700px]:text-[60px]">
+            Every step of the journey,
+            <br />
             <span style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>calmly organised</span>.
           </h1>
-          <p className="mt-5 max-w-[420px] text-[17px] font-normal leading-6 text-[#68757B] sm:text-[19px] sm:leading-7">
-            From the flight to the last cup of coffee, your plans, documents, and next moves stay clear and ready, wherever the trip takes you.
+          <p className="mt-5 max-w-[520px] text-[17px] font-normal leading-6 text-[#68757B] sm:text-[19px] sm:leading-7">
+            From the flight to the last cup of coffee, your plans, documents, and next moves stay clear and ready, wherever your Journey takes you.
           </p>
-          <div className="mt-7 flex flex-wrap gap-2.5">
+          <div className="mt-12 grid max-w-[620px] gap-3 sm:grid-cols-3">
             {[
-              { label: "Connected inbox", icon: <MailCheck size={14} /> },
-              { label: "Journey Timeline", icon: <Route size={14} /> },
-              { label: "Travel documents", icon: <FileText size={14} /> },
+              { label: "Next move", value: "24 min", icon: <Clock size={16} />, color: "#F17455" },
+              { label: "Plans ready", value: "14", icon: <CalendarClock size={16} />, color: "#F5D64A" },
+              { label: "Docs saved", value: "8", icon: <FileText size={16} />, color: "#A9C8F0" },
             ].map((item) => (
-              <span
+              <div
                 key={item.label}
-                className="flex items-center gap-1.5 rounded-full border border-[#C9D6D2] bg-white/80 px-3.5 py-2 text-[12px] font-black text-[#080A0A] shadow-[0_2px_10px_rgba(8,10,10,0.05)] backdrop-blur"
+                className="rounded-[24px] border-2 border-[#080A0A] p-3.5 text-[#080A0A] shadow-[5px_5px_0_rgba(8,10,10,0.12)]"
+                style={{ background: item.color }}
               >
-                {item.icon}
-                {item.label}
-              </span>
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase tracking-[0.12em] text-[#080A0A]/65">{item.label}</span>
+                  {item.icon}
+                </div>
+                <p className="text-[28px] font-black leading-none">{item.value}</p>
+              </div>
             ))}
           </div>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-12 flex flex-wrap gap-3">
             <a
               href="#timeline"
               className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#080A0A] px-6 text-[15px] font-black text-white transition-transform hover:-translate-y-0.5"
@@ -1306,45 +1414,10 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
               See the Journey
               <ArrowRight size={17} />
             </a>
-            <button
-              type="button"
-              onClick={onOpenScreens}
-              className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#F6EDC9] px-5 text-[15px] font-black text-[#080A0A] transition-colors hover:bg-[#F5D64A]"
-            >
-              Screens
-              <MonitorSmartphone size={17} />
-            </button>
           </div>
         </div>
-        <div className="mx-auto w-full max-w-[720px] lg:hidden">
+        <div className="relative z-10 mx-auto w-full max-w-[720px] lg:max-w-[760px] lg:justify-self-start">
           <JourneyArtwork />
-        </div>
-
-        <div className="hidden w-full overflow-hidden lg:flex lg:h-[calc(100svh-75px)] lg:flex-col lg:items-center lg:gap-10 lg:pb-4 lg:pt-16">
-          <div className="mx-auto flex w-full max-w-[720px] shrink-0 flex-col items-center px-12 text-center">
-            <h1 className="max-w-[620px] text-[46px] font-black leading-[1.04] text-[#080A0A] xl:text-[56px]">
-              Every step of the journey,<br />
-              <span style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>calmly organised</span>.
-            </h1>
-            <p className="mt-8 max-w-[520px] text-[19px] font-normal leading-7 text-[#68757B]">
-              From the flight to the last cup of coffee, your plans, documents, and next moves stay clear and ready, wherever the trip takes you.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <a
-                href="#timeline"
-                className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#080A0A] px-6 text-[15px] font-black text-white transition-transform hover:-translate-y-0.5"
-              >
-                See the Journey
-                <ArrowRight size={17} />
-              </a>
-            </div>
-          </div>
-
-          <div className="min-h-0 w-full flex-1 px-16">
-            <div className="relative h-full w-full">
-              <HeroImageCarousel />
-            </div>
-          </div>
         </div>
 
         <a
@@ -1356,8 +1429,8 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
         </a>
       </section>
 
-      <section className="onward-section grid snap-start items-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-12">
-        <div className="mx-auto w-full max-w-[500px]">
+      <section className="onward-section grid snap-start items-start gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-12">
+        <div className="mx-auto w-full max-w-[500px] lg:mx-0">
           <p className="mb-3 text-[12px] font-black uppercase tracking-[0.14em] text-[#F17455]">Concept</p>
           <h2 className="text-[34px] font-black leading-[1.06] text-[#080A0A] sm:text-[48px]">
             A Journey is the home base.
@@ -1369,9 +1442,12 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
         <div className="mx-auto w-full max-w-[580px]">
           <JourneyContextRows />
         </div>
+        <div className="activity-section-row lg:col-span-2">
+          <ActivityCardGroup start={0} count={5} />
+        </div>
       </section>
 
-      <section id="timeline" className="onward-section grid snap-start items-center gap-6 px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12">
+      <section id="timeline" className="onward-section grid snap-start items-start gap-6 px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12">
         <div className="mx-auto w-full max-w-[500px]">
           <p className="mb-3 text-[12px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Timeline</p>
           <h2 className="text-[34px] font-black leading-[1.06] text-[#080A0A] sm:text-[48px]">
@@ -1403,9 +1479,12 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
         <div className="mx-auto w-full max-w-[560px]">
           <MiniTimeline />
         </div>
+        <div className="activity-section-row lg:col-span-2">
+          <ActivityCardGroup start={5} count={5} />
+        </div>
       </section>
 
-      <section className="onward-section grid snap-start items-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.85fr_1.15fr] lg:px-12">
+      <section className="onward-section grid snap-start items-start gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.85fr_1.15fr] lg:px-12">
         <div className="mx-auto w-full max-w-[460px]">
           <p className="mb-3 text-[12px] font-black uppercase tracking-[0.14em] text-[#F17455]">Import and review</p>
           <h2 className="text-[34px] font-black leading-[1.06] text-[#080A0A] sm:text-[48px]">
@@ -1418,9 +1497,12 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
         <div className="mx-auto w-full max-w-[560px]">
           <ImportFlowPanel />
         </div>
+        <div className="activity-section-row lg:col-span-2">
+          <ActivityCardGroup start={10} count={5} />
+        </div>
       </section>
 
-      <section className="onward-section grid snap-start items-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-12">
+      <section className="onward-section grid snap-start items-start gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-12">
         <div className="mx-auto w-full max-w-[560px]">
           <DayContextPanel />
         </div>
@@ -1433,9 +1515,12 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
             The app keeps live context close to the Journey: leave-by prompts, saved tickets, document access, and clear review states.
           </p>
         </div>
+        <div className="activity-section-row lg:col-span-2">
+          <ActivityCardGroup start={15} count={5} />
+        </div>
       </section>
 
-      <section className="onward-section grid snap-start items-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12">
+      <section className="onward-section grid snap-start items-start gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12">
         <div className="mx-auto w-full max-w-[500px]">
           <p className="mb-3 text-[12px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Trust</p>
           <h2 className="text-[34px] font-black leading-[1.06] text-[#080A0A] sm:text-[48px]">
@@ -1468,6 +1553,9 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
               </div>
             ))}
           </div>
+        </div>
+        <div className="activity-section-row lg:col-span-2">
+          <ActivityCardGroup start={20} count={4} />
         </div>
       </section>
 
