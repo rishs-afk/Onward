@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight, Bell, Brain, CalendarClock,
   Clock, Compass, MailCheck, MapPin,
@@ -1034,6 +1035,12 @@ function AppNav({ surface, onSurfaceChange }: {
 }
 
 function JourneyArtwork() {
+  const shouldReduceMotion = useReducedMotion();
+  const popIn = (delay: number) => ({
+    initial: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.55, y: 14 },
+    animate: { opacity: 1, scale: 1, y: 0 },
+    transition: { duration: shouldReduceMotion ? 0.3 : 0.55, ease: [0.16, 1, 0.3, 1], delay: shouldReduceMotion ? 0 : delay },
+  });
   const timelineRows = [
     { title: "Train to Porto", detail: "Platform 2 · Seat 14A", time: "10:15", color: "#F5D142", icon: <Train size={14} /> },
     { title: "Hotel check-in", detail: "Confirmation ready", time: "15:00", color: "#6FA8F5", icon: <Hotel size={14} /> },
@@ -1043,6 +1050,11 @@ function JourneyArtwork() {
   return (
     <div className="relative mx-auto flex w-full max-w-[340px] flex-col items-center gap-5 sm:block sm:max-w-[760px] sm:min-h-[610px] lg:min-h-[650px] xl:max-w-[820px]">
       <div className="relative z-40 w-[276px] sm:absolute sm:left-1/2 sm:top-5 sm:w-[290px] sm:-translate-x-1/2 lg:w-[300px] xl:w-[318px]">
+        <motion.div
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.88, y: 24 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: shouldReduceMotion ? 0.3 : 0.75, ease: [0.16, 1, 0.3, 1], delay: shouldReduceMotion ? 0 : 0.35 }}
+        >
         <div className="onward-phone-shell hero-phone-shell aspect-[0.52/1]">
           <div className="onward-phone-screen px-4 pb-20 pt-12 sm:px-5 sm:pt-14">
             <div className="onward-phone-island" />
@@ -1096,9 +1108,14 @@ function JourneyArtwork() {
             </div>
           </div>
         </div>
+        </motion.div>
       </div>
 
-      <div className="onward-floating-card onward-reference-card hero-floating-card relative z-20 w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[12%] sm:max-w-none sm:-rotate-[2deg] md:left-[3%] xl:left-[3%]" style={{ background: "#F2977A" }}>
+      <motion.div
+        className="onward-floating-card onward-reference-card hero-floating-card relative z-20 w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[12%] sm:max-w-none md:left-[3%] xl:left-[3%]"
+        style={{ background: "#F2977A", "--hero-card-rotate": "-2deg" } as React.CSSProperties}
+        {...popIn(0.55)}
+      >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
             <FileText size={16} />
@@ -1108,9 +1125,13 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">Saved offline</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[40%] sm:block sm:max-w-none sm:rotate-[1.5deg] md:left-[3%] xl:left-[3%]" style={{ background: "#7FD8CB" }}>
+      <motion.div
+        className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[40%] sm:block sm:max-w-none md:left-[3%] xl:left-[3%]"
+        style={{ background: "#7FD8CB", "--hero-card-rotate": "1.5deg" } as React.CSSProperties}
+        {...popIn(0.63)}
+      >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
             <MailCheck size={16} />
@@ -1120,9 +1141,13 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">Plans pulled in</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:right-[2%] sm:top-[14%] sm:block sm:max-w-none sm:rotate-[-1.5deg] md:right-[3%] xl:right-[3%]" style={{ background: "#6FA8F5" }}>
+      <motion.div
+        className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:right-[2%] sm:top-[14%] sm:block sm:max-w-none md:right-[3%] xl:right-[3%]"
+        style={{ background: "#6FA8F5", "--hero-card-rotate": "-1.5deg" } as React.CSSProperties}
+        {...popIn(0.71)}
+      >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
             <Compass size={16} />
@@ -1132,9 +1157,13 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">Lisbon today</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:right-[2%] sm:top-[42%] sm:block sm:max-w-none sm:rotate-[1.5deg] md:right-[3%] xl:right-[3%]" style={{ background: "#F5D142" }}>
+      <motion.div
+        className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:right-[2%] sm:top-[42%] sm:block sm:max-w-none md:right-[3%] xl:right-[3%]"
+        style={{ background: "#F5D142", "--hero-card-rotate": "1.5deg" } as React.CSSProperties}
+        {...popIn(0.79)}
+      >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
             <Bell size={16} />
@@ -1144,9 +1173,13 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">24 min to move</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:right-[2%] sm:top-[70%] sm:block sm:max-w-none sm:-rotate-[1.5deg] md:right-[3%] xl:right-[3%]" style={{ background: "#FF9F45" }}>
+      <motion.div
+        className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:right-[2%] sm:top-[70%] sm:block sm:max-w-none md:right-[3%] xl:right-[3%]"
+        style={{ background: "#FF9F45", "--hero-card-rotate": "-1.5deg" } as React.CSSProperties}
+        {...popIn(0.87)}
+      >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
             <Hotel size={16} />
@@ -1156,9 +1189,13 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">Ref attached</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[68%] sm:block sm:max-w-none sm:rotate-[-1.5deg] md:left-[3%] xl:left-[3%]" style={{ background: "#A7A0E8" }}>
+      <motion.div
+        className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[68%] sm:block sm:max-w-none md:left-[3%] xl:left-[3%]"
+        style={{ background: "#A7A0E8", "--hero-card-rotate": "-1.5deg" } as React.CSSProperties}
+        {...popIn(0.95)}
+      >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
             <Brain size={16} />
@@ -1168,19 +1205,29 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">Ask in context</p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
 
 function JourneyContextRows() {
+  const shouldReduceMotion = useReducedMotion();
+  const item = fadeUpItemVariants(shouldReduceMotion);
+
   return (
-    <div className="grid gap-4">
+    <motion.div
+      className="grid gap-4"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.1)}
+    >
       {APP_FEATURES.map((feature, index) => (
-        <article
+        <motion.article
           key={feature.title}
           className="onward-reference-card flex gap-4 p-4 sm:gap-5 sm:p-5 xl:p-6"
           style={{ background: APP_CARD_COLORS[index % APP_CARD_COLORS.length] }}
+          variants={item}
         >
           <div className="onward-icon-tile">
             {feature.icon}
@@ -1189,9 +1236,9 @@ function JourneyContextRows() {
             <h3 className="text-[18px] font-black leading-tight text-[#080A0A] sm:text-[24px]">{feature.title}</h3>
             <p className="mt-2 hidden text-[15px] font-bold leading-6 text-[#080A0A]/70 sm:block lg:text-[17px] lg:leading-7">{feature.copy}</p>
           </div>
-        </article>
+        </motion.article>
       ))}
-    </div>
+    </motion.div>
   );
 }
 
@@ -1366,22 +1413,24 @@ function TrustPanel() {
   );
 }
 
-function ActivityImageCard({ image, activity, index, className }: {
+function ActivityImageCard({ image, activity, index, className, variants }: {
   image: { src: string; name: string };
   activity: typeof LANDING_ACTIVITIES[number];
   index: number;
   className?: string;
+  variants?: Record<string, unknown>;
 }) {
   const tilt = [-2.5, 1.6, -1.2, 2.2, -1.8, 1.1][index % 6];
 
   return (
-    <article
+    <motion.article
       className={cn("activity-image-card", className)}
       style={{
         "--activity-bg": APP_CARD_COLORS[index % APP_CARD_COLORS.length],
         "--activity-progress": activity.progress,
         "--activity-tilt": `${tilt}deg`,
       } as React.CSSProperties}
+      variants={variants}
     >
       <div className="activity-image-frame">
         <img
@@ -1404,13 +1453,14 @@ function ActivityImageCard({ image, activity, index, className }: {
           <span />
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
-function ActivityCardSlot({ index, className }: {
+function ActivityCardSlot({ index, className, variants }: {
   index: number;
   className?: string;
+  variants?: Record<string, unknown>;
 }) {
   const image = ACTIVITY_IMAGES[index];
   if (!image) return null;
@@ -1421,6 +1471,7 @@ function ActivityCardSlot({ index, className }: {
       activity={LANDING_ACTIVITIES[index % LANDING_ACTIVITIES.length]}
       index={index}
       className={className}
+      variants={variants}
     />
   );
 }
@@ -1430,8 +1481,17 @@ function ActivityCardCluster({ indices, className, routeLine }: {
   className?: string;
   routeLine?: boolean;
 }) {
+  const shouldReduceMotion = useReducedMotion();
+  const cardVariants = fadeUpItemVariants(shouldReduceMotion);
+
   return (
-    <div className={cn("activity-card-cluster", className)}>
+    <motion.div
+      className={cn("activity-card-cluster", className)}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.15)}
+    >
       {routeLine && (
         <svg
           className="timeline-route-line"
@@ -1455,9 +1515,10 @@ function ActivityCardCluster({ indices, className, routeLine }: {
           key={index}
           index={index}
           className="activity-card-aside activity-card-cluster-card"
+          variants={cardVariants}
         />
       ))}
-    </div>
+    </motion.div>
   );
 }
 
@@ -1627,30 +1688,91 @@ function useSectionScroll() {
   return containerRef;
 }
 
+function staggerContainerVariants(staggerChildren: number, delayChildren = 0) {
+  return {
+    hidden: {},
+    visible: { transition: { staggerChildren, delayChildren } },
+  };
+}
+
+function fadeUpItemVariants(shouldReduceMotion: boolean | null) {
+  return {
+    hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 22 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: shouldReduceMotion ? 0.3 : 0.7, ease: [0.16, 1, 0.3, 1] },
+    },
+  };
+}
+
+function popUpItemVariants(shouldReduceMotion: boolean | null) {
+  return {
+    hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.75, y: 10 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { duration: shouldReduceMotion ? 0.3 : 0.45, ease: [0.16, 1, 0.3, 1] },
+    },
+  };
+}
+
+function slideInItemVariants(shouldReduceMotion: boolean | null, fromX: number) {
+  return {
+    hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: fromX },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: shouldReduceMotion ? 0.3 : 0.7, ease: [0.16, 1, 0.3, 1] },
+    },
+  };
+}
+
 function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
   const sectionScrollRef = useSectionScroll();
+  const shouldReduceMotion = useReducedMotion();
+  const fadeUpItem = fadeUpItemVariants(shouldReduceMotion);
+  const popUpItem = popUpItemVariants(shouldReduceMotion);
 
   return (
     <main ref={sectionScrollRef} className="onward-landing text-[#080A0A]">
       <section className="onward-section relative grid content-center items-center justify-center gap-9 overflow-hidden bg-[#F9EFD1] px-5 py-7 sm:gap-10 sm:px-8 sm:py-9 lg:grid-cols-[0.78fr_1.22fr] lg:gap-7 lg:px-10 xl:gap-8">
-        <div className="hero-copy-block relative z-10 mx-auto w-full max-w-[540px] lg:max-w-[600px] lg:justify-self-end">
-          <div className="hero-brand-row">
+        <motion.div
+          className="hero-copy-block relative z-10 mx-auto w-full max-w-[540px] lg:max-w-[600px] lg:justify-self-end"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.12, shouldReduceMotion ? 0 : 0.15)}
+        >
+          <motion.div className="hero-brand-row" variants={fadeUpItem}>
             <p
               className="hero-brand-word text-[38px] leading-none lg:text-[48px]"
               style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
             >
               Onward
             </p>
-          </div>
-          <h1 className="hero-headline max-w-[620px] text-[44px] font-black leading-[1.04] text-[#080A0A] sm:text-[58px] xl:text-[64px]">
-            <span className="hero-headline-line">Every step of</span>
-            <span className="hero-headline-line">the journey,</span>
-            <span className="hero-script-highlight hero-headline-line" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>calmly organised.</span>
-          </h1>
-          <p className="hero-copy-text mt-6 max-w-[500px] text-[19px] font-normal leading-7 text-[#68757B] sm:text-[20px] sm:leading-8">
+          </motion.div>
+          <motion.h1
+            className="hero-headline max-w-[620px] text-[44px] font-black leading-[1.04] text-[#080A0A] sm:text-[58px] xl:text-[64px]"
+            variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.09)}
+          >
+            <motion.span className="hero-headline-line" variants={fadeUpItem}>Every step of</motion.span>
+            <motion.span className="hero-headline-line" variants={fadeUpItem}>the journey,</motion.span>
+            <motion.span
+              className="hero-script-highlight hero-headline-line"
+              style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
+              variants={fadeUpItem}
+            >
+              calmly organised.
+            </motion.span>
+          </motion.h1>
+          <motion.p
+            className="hero-copy-text mt-6 max-w-[500px] text-[19px] font-normal leading-7 text-[#68757B] sm:text-[20px] sm:leading-8"
+            variants={fadeUpItem}
+          >
             From the flight to the last cup of coffee, your plans, documents, and next moves stay clear and ready, wherever your Journey takes you.
-          </p>
-          <div className="hero-cta-row mt-11 flex flex-wrap gap-3">
+          </motion.p>
+          <motion.div className="hero-cta-row mt-11 flex flex-wrap gap-3" variants={fadeUpItem}>
             <a
               href="#timeline"
               className="hero-primary-cta flex items-center justify-center gap-3 rounded-full bg-[#080A0A] text-white transition-transform hover:-translate-y-0.5"
@@ -1658,8 +1780,8 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
               See the Journey
               <ArrowRight size={22} />
             </a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
         <div className="relative z-10 mx-auto w-full max-w-[760px] lg:mx-0 lg:max-w-[820px] lg:justify-self-end">
           <JourneyArtwork />
         </div>
@@ -1667,20 +1789,38 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
 
       <section className="onward-section flex items-center justify-center bg-[#F9EFD1] px-5 py-10 sm:px-8 lg:px-12">
         <div className="feature-cloud-layout">
-          <div className="feature-cloud-card feature-cloud-card-left">
+          <motion.div
+            className="feature-cloud-card feature-cloud-card-left"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            variants={slideInItemVariants(shouldReduceMotion, -40)}
+          >
             <ActivityCardSlot index={15} className="activity-card-aside" />
-          </div>
-          <div className="feature-cloud-copy">
-            <h2 className="landing-headline mx-auto max-w-[760px]">
-              <span className="landing-headline-line">Turn your travel chaos</span>
-              <span className="landing-headline-line">
+          </motion.div>
+          <motion.div
+            className="feature-cloud-copy"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.1)}
+          >
+            <motion.h2
+              className="landing-headline mx-auto max-w-[760px]"
+              variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.09)}
+            >
+              <motion.span className="landing-headline-line" variants={fadeUpItem}>Turn your travel chaos</motion.span>
+              <motion.span className="landing-headline-line" variants={fadeUpItem}>
                 into{" "}
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>
                   calm confidence.
                 </span>
-              </span>
-            </h2>
-            <div className="mx-auto mt-10 flex max-w-[900px] flex-wrap items-center justify-center gap-3">
+              </motion.span>
+            </motion.h2>
+            <motion.div
+              className="mx-auto mt-10 flex max-w-[900px] flex-wrap items-center justify-center gap-3"
+              variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.045, shouldReduceMotion ? 0 : 0.15)}
+            >
               {[
                 { label: "Real-Time Updates", icon: <Clock size={14} />, color: "#F2977A" },
                 { label: "Works Offline", icon: <Wifi size={14} />, color: "#F5D142" },
@@ -1695,41 +1835,54 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 { label: "Stays Tracked", icon: <Hotel size={14} />, color: "#D45BA0" },
                 { label: "Every Transport Type", icon: <Train size={14} />, color: "#F2B27A" },
               ].map((badge) => (
-                <span
+                <motion.span
                   key={badge.label}
                   className="flex items-center gap-2 rounded-full border-2 border-[#080A0A] px-4 py-2 text-[12px] font-black uppercase tracking-[0.04em] text-[#080A0A] shadow-[3px_3px_0_rgba(8,10,10,0.16)]"
                   style={{ background: badge.color }}
+                  variants={popUpItem}
                 >
                   {badge.icon}
                   {badge.label}
-                </span>
+                </motion.span>
               ))}
-            </div>
-          </div>
-          <div className="feature-cloud-card feature-cloud-card-right">
+            </motion.div>
+          </motion.div>
+          <motion.div
+            className="feature-cloud-card feature-cloud-card-right"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            variants={slideInItemVariants(shouldReduceMotion, 40)}
+          >
             <ActivityCardSlot index={18} className="activity-card-aside" />
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="onward-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
         <div className="flex w-full flex-col gap-6 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
-          <div className="mx-auto w-full max-w-[560px] lg:mx-0 lg:max-w-[560px] lg:shrink lg:basis-[560px]">
-            <p className="mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]">Concept</p>
-            <h2 className="landing-headline">
-              <span className="landing-headline-line">A Journey is</span>
-              <span className="landing-headline-line">
+          <motion.div
+            className="mx-auto w-full max-w-[560px] lg:mx-0 lg:max-w-[560px] lg:shrink lg:basis-[560px]"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.12, shouldReduceMotion ? 0 : 0.05)}
+          >
+            <motion.p className="mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]" variants={fadeUpItem}>Concept</motion.p>
+            <motion.h2 className="landing-headline" variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.09)}>
+              <motion.span className="landing-headline-line" variants={fadeUpItem}>A Journey is</motion.span>
+              <motion.span className="landing-headline-line" variants={fadeUpItem}>
                 the{" "}
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>home base.</span>
-              </span>
-            </h2>
-            <p className="landing-copy mt-5 max-w-[440px] text-balance">
+              </motion.span>
+            </motion.h2>
+            <motion.p className="landing-copy mt-5 max-w-[440px] text-balance" variants={fadeUpItem}>
               Onward is organised around the thing travellers actually need: one place for plans, documents, reminders, people, and review.
-            </p>
+            </motion.p>
             <div className="mt-8 hidden lg:block">
               <ActivityCardCluster indices={[0, 7]} className="concept-card-cluster" />
             </div>
-          </div>
+          </motion.div>
           <div className="mx-auto w-full max-w-[580px] lg:mx-0 lg:max-w-[580px] lg:shrink lg:basis-[580px]">
             <JourneyContextRows />
           </div>
