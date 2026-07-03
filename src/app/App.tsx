@@ -2077,6 +2077,56 @@ function PhoneFrame({ screen, isOnboarding, children, onTab, onNav }: {
   );
 }
 
+const SCREENS_PASSWORD = "12345678";
+
+function ScreensPasswordGate({ onUnlock }: { onUnlock: () => void }) {
+  const [value, setValue] = useState("");
+  const [error, setError] = useState(false);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (value === SCREENS_PASSWORD) {
+      onUnlock();
+    } else {
+      setError(true);
+    }
+  }
+
+  return (
+    <main className="flex min-h-[calc(100vh-72px)] items-center justify-center bg-[#EEF3F1] px-5">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-[360px] rounded-[28px] border border-[#DDE4E3] bg-white p-8 shadow-sm"
+      >
+        <p className="text-[13px] font-bold text-[#68757B]">Screen library</p>
+        <h1
+          className="mt-1 text-[26px] leading-tight text-[#153E4A]"
+          style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
+        >
+          This section is password protected.
+        </h1>
+        <input
+          type="password"
+          autoFocus
+          value={value}
+          onChange={(e) => { setValue(e.target.value); setError(false); }}
+          placeholder="Password"
+          className="mt-6 w-full rounded-lg border border-[#DDE4E3] px-4 py-3 text-[15px] font-medium text-[#153E4A] outline-none focus:border-[#153E4A]"
+        />
+        {error && (
+          <p className="mt-2 text-[13px] font-bold text-[#C0392B]">Incorrect password. Try again.</p>
+        )}
+        <button
+          type="submit"
+          className="mt-5 w-full rounded-lg bg-[#153E4A] py-3 text-[15px] font-bold text-white transition-opacity hover:opacity-90"
+        >
+          Unlock
+        </button>
+      </form>
+    </main>
+  );
+}
+
 function ScreensPage({ screen, activeGroup, onGroupChange, onNav, isOnboarding, children, onTab }: {
   screen: Screen;
   activeGroup: ScreenGroupId;
@@ -2166,6 +2216,7 @@ function ScreensPage({ screen, activeGroup, onGroupChange, onNav, isOnboarding, 
 
 export default function App() {
   const [surface, setSurface] = useState<Surface>("home");
+  const [screensUnlocked, setScreensUnlocked] = useState(false);
   const [activeScreenGroup, setActiveScreenGroup] = useState<ScreenGroupId>("all");
   const [screen, setScreen] = useState<Screen>("launch");
   const [journeyFormMode, setJourneyFormMode] = useState<"add" | "edit">("add");
@@ -2538,6 +2589,8 @@ export default function App() {
 
       {surface === "home" ? (
         <PresentationHome onOpenScreens={() => setSurface("screens")} />
+      ) : !screensUnlocked ? (
+        <ScreensPasswordGate onUnlock={() => setScreensUnlocked(true)} />
       ) : (
         <ScreensPage
           screen={screen}
