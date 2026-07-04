@@ -1781,7 +1781,9 @@ function useLandingGsap(containerRef: React.RefObject<HTMLElement | null>, prefe
         .filter((section) => section !== hero)
         .forEach((section) => {
           const kind = section.dataset.gsapKind;
-          const text = section.querySelectorAll(".section-kicker, .landing-headline-line, .landing-copy");
+          const text = section.querySelectorAll(
+            ".section-kicker, .landing-headline-line, .feature-cloud-heading-main, .feature-cloud-heading-script, .landing-copy"
+          );
           const cards = section.querySelectorAll(
             ".feature-badge, .journey-context-card, .activity-image-card, .mini-timeline-card, .import-flow-card, .day-context-card, .travel-day-board, .trust-panel, .trust-point-card, .travel-day-mini-card, .trust-stat-row > div"
           );
@@ -2007,15 +2009,13 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
           <div
             className="feature-cloud-copy"
           >
-            <h2
-              className="landing-headline mx-auto max-w-[860px]"
-            >
-              <span className="landing-headline-line">Turn your travel chaos</span>
-              <span className="landing-headline-line">
-                into{" "}
-                <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>
-                  calm confidence.
-                </span>
+            <h2 className="landing-headline feature-cloud-heading">
+              <span className="feature-cloud-heading-main">Turn your travel chaos into</span>{" "}
+              <span
+                className="hero-script-highlight feature-cloud-heading-script"
+                style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
+              >
+                calm confidence.
               </span>
             </h2>
             <div

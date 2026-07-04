@@ -88,6 +88,10 @@ body,
     width: 100%;
   }
 
+  .onward-section[data-gsap-kind="feature-cloud"] {
+    max-width: 1840px;
+  }
+
   .hero-copy-block {
     --hero-body-gap: clamp(30px, 3.2vh, 38px);
     --hero-outer-gap: clamp(88px, 9vh, 104px);
@@ -407,17 +411,32 @@ body,
 .feature-cloud-layout {
   align-items: center;
   display: grid;
-  column-gap: clamp(52px, 8vw, 130px);
+  column-gap: clamp(36px, 6vw, 110px);
   row-gap: clamp(24px, 4vw, 64px);
-  grid-template-columns: minmax(190px, 300px) minmax(0, 920px) minmax(190px, 300px);
+  grid-template-columns: minmax(140px, 260px) minmax(0, 1120px) minmax(140px, 260px);
   justify-content: center;
   margin: 0 auto;
+  max-width: 1840px;
   min-height: calc(100svh - 175px);
-  width: min(100%, 1840px);
+  width: 100%;
 }
 
 .feature-cloud-copy {
   text-align: center;
+}
+
+.feature-cloud-heading {
+  margin-inline: auto;
+  max-width: min(100%, 1120px);
+}
+
+.feature-cloud-heading-main {
+  display: block;
+  white-space: nowrap;
+}
+
+.feature-cloud-heading-script {
+  white-space: nowrap;
 }
 
 .feature-cloud-card {
@@ -902,6 +921,12 @@ body,
     max-width: 860px;
   }
 
+  .feature-cloud-heading {
+    font-size: clamp(62px, 4.4vw, 78px);
+    line-height: 0.95;
+    max-width: min(100%, 1120px);
+  }
+
   .landing-copy {
     font-size: clamp(24px, 1.35vw, 28px);
     line-height: 1.36;
@@ -1117,6 +1142,17 @@ body,
   }
 }
 
+@media (max-width: 1439px) {
+  .feature-cloud-layout {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+  }
+
+  .feature-cloud-card {
+    display: none;
+  }
+}
+
 @media (max-width: 639px) {
   .onward-landing {
     height: calc(100svh - 130px);
@@ -1272,6 +1308,12 @@ body,
     padding: 0 14px;
   }
 
+  .feature-cloud-heading {
+    font-size: clamp(40px, 7vw, 44px);
+    line-height: 0.98;
+    max-width: min(100%, 720px);
+  }
+
   .activity-card-cluster {
     display: none;
   }
@@ -1320,5 +1362,11 @@ body,
 
   .footer-bottom {
     justify-content: flex-start;
+  }
+}
+
+@media (max-width: 479px) {
+  .feature-cloud-heading-main {
+    white-space: normal;
   }
 }
