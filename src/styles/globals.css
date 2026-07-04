@@ -108,7 +108,16 @@ body,
     font-size: 58px;
   }
 
+  .hero-headline {
+    font-size: 58px;
+  }
+
   .landing-copy {
+    font-size: 20px;
+    line-height: 1.55;
+  }
+
+  .hero-copy-text {
     font-size: 20px;
     line-height: 1.55;
   }
@@ -116,7 +125,8 @@ body,
 
 @media (min-width: 1280px) {
   .landing-headline {
-    font-size: 64px;
+    font-size: clamp(68px, 3.85vw, 78px);
+    line-height: 0.96;
   }
 }
 
@@ -188,6 +198,14 @@ body,
   display: block;
 }
 
+.hero-headline {
+  color: #080a0a;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.04;
+}
+
 .hero-script-highlight {
   background: linear-gradient(transparent 72%, rgba(245, 209, 66, 0.55) 72%);
   display: inline-block;
@@ -214,6 +232,10 @@ body,
 }
 
 .hero-copy-text {
+  color: #68757b;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.5;
   margin-top: var(--hero-body-gap, 1.5rem);
   max-width: 500px;
 }
@@ -387,11 +409,11 @@ body,
   display: grid;
   column-gap: clamp(52px, 8vw, 130px);
   row-gap: clamp(24px, 4vw, 64px);
-  grid-template-columns: minmax(190px, 300px) minmax(0, 760px) minmax(190px, 300px);
+  grid-template-columns: minmax(190px, 300px) minmax(0, 920px) minmax(190px, 300px);
   justify-content: center;
   margin: 0 auto;
   min-height: calc(100svh - 175px);
-  width: min(100%, 1680px);
+  width: min(100%, 1840px);
 }
 
 .feature-cloud-copy {
@@ -416,7 +438,7 @@ body,
 
 .concept-layout {
   margin-inline: auto;
-  max-width: 1320px;
+  max-width: 1540px;
 }
 
 .concept-copy {
@@ -619,7 +641,7 @@ body,
 .travel-day-copy,
 .trust-copy {
   margin: 0 auto;
-  max-width: 560px;
+  max-width: 840px;
   width: 100%;
 }
 
@@ -868,6 +890,36 @@ body,
 }
 
 @media (min-width: 1024px) {
+  .concept-section,
+  .travel-day-section,
+  .trust-section {
+    max-width: 1840px;
+  }
+
+  .landing-headline {
+    font-size: clamp(68px, 3.85vw, 78px);
+    line-height: 0.96;
+    max-width: 860px;
+  }
+
+  .landing-copy {
+    font-size: clamp(24px, 1.35vw, 28px);
+    line-height: 1.36;
+    max-width: 780px;
+  }
+
+  .hero-headline {
+    font-size: clamp(68px, 3.85vw, 78px);
+    line-height: 0.96;
+    max-width: 860px;
+  }
+
+  .hero-copy-text {
+    font-size: clamp(24px, 1.35vw, 28px);
+    line-height: 1.36;
+    max-width: 780px;
+  }
+
   .import-section {
     max-width: 1840px;
   }
@@ -894,12 +946,12 @@ body,
 
   .concept-layout {
     display: grid;
-    grid-template-columns: minmax(620px, 0.64fr) minmax(430px, 0.36fr);
+    grid-template-columns: minmax(740px, 0.6fr) minmax(430px, 0.4fr);
   }
 
   .travel-day-layout,
   .trust-layout {
-    grid-template-columns: minmax(420px, 560px) minmax(0, 640px);
+    grid-template-columns: minmax(700px, 840px) minmax(0, 640px);
     justify-content: space-between;
   }
 
@@ -927,16 +979,25 @@ body,
 }
 
 @media (min-width: 1280px) {
+  .hero-section {
+    grid-template-columns: minmax(760px, 0.92fr) minmax(700px, 1.08fr);
+    max-width: 1840px;
+  }
+
+  .hero-copy-block {
+    max-width: 860px;
+  }
+
   .timeline-layout {
     align-items: center;
     display: grid;
     gap: clamp(72px, 7vw, 132px);
-    grid-template-columns: minmax(420px, 0.32fr) minmax(0, 0.68fr);
+    grid-template-columns: minmax(640px, 0.38fr) minmax(0, 0.62fr);
   }
 
   .timeline-copy {
     justify-self: start;
-    max-width: 620px;
+    max-width: 780px;
   }
 
   .timeline-visual {

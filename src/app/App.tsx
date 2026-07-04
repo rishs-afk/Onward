@@ -1969,9 +1969,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
               Onward
             </p>
           </div>
-          <h1
-            className="hero-headline max-w-[620px] text-[44px] font-black leading-[1.04] text-[#080A0A] sm:text-[58px] xl:text-[64px]"
-          >
+          <h1 className="hero-headline max-w-[860px] font-black text-[#080A0A]">
             <span className="hero-headline-line">Every step of</span>
             <span className="hero-headline-line">the journey,</span>
             <span
@@ -1981,9 +1979,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
               calmly organised.
             </span>
           </h1>
-          <p
-            className="hero-copy-text mt-6 max-w-[500px] text-[19px] font-normal leading-7 text-[#68757B] sm:text-[20px] sm:leading-8"
-          >
+          <p className="hero-copy-text mt-6 max-w-[780px] font-normal text-[#68757B]">
             From the flight to the last cup of coffee, your plans, documents, and next moves stay clear and ready, wherever your Journey takes you.
           </p>
           <div className="hero-cta-row mt-11 flex flex-wrap gap-3">
@@ -2012,7 +2008,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
             className="feature-cloud-copy"
           >
             <h2
-              className="landing-headline mx-auto max-w-[760px]"
+              className="landing-headline mx-auto max-w-[860px]"
             >
               <span className="landing-headline-line">Turn your travel chaos</span>
               <span className="landing-headline-line">
@@ -2061,7 +2057,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
       <LandingSection kind="concept" className="concept-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
         <div className="concept-layout flex w-full flex-col gap-6 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
           <div
-            className="concept-copy mx-auto w-full max-w-[760px] lg:mx-0 lg:max-w-[760px] lg:shrink lg:basis-[760px]"
+            className="concept-copy mx-auto w-full max-w-[840px] lg:mx-0 lg:max-w-[840px] lg:shrink lg:basis-[840px]"
           >
             <p className="section-kicker mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]">Concept</p>
             <h2 className="landing-headline">
@@ -2071,7 +2067,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>home base.</span>
               </span>
             </h2>
-            <p className="landing-copy mt-5 max-w-[700px] text-balance">
+            <p className="landing-copy mt-5 max-w-[780px] text-balance">
               Onward is organised around the thing travellers actually need: one place for plans, documents, reminders, people, and review.
             </p>
             <div className="mt-8 hidden lg:block">
@@ -2086,7 +2082,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
 
       <LandingSection id="timeline" kind="timeline" className="timeline-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
         <div className="timeline-layout mx-auto flex w-full flex-col gap-6 sm:gap-10 lg:gap-16">
-          <div className="timeline-copy mx-auto w-full max-w-[620px] lg:mx-0">
+          <div className="timeline-copy mx-auto w-full max-w-[780px] lg:mx-0">
             <p className="section-kicker mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Timeline</p>
             <h2 className="landing-headline">
               <span className="landing-headline-line">Know what</span>
@@ -2095,7 +2091,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>next.</span>
               </span>
             </h2>
-            <p className="landing-copy mt-5 max-w-[560px] text-balance">
+            <p className="landing-copy mt-5 max-w-[780px] text-balance">
               Flights, stays, trains, documents, and reminders sit in one ordered Journey Timeline.
             </p>
           </div>
@@ -2117,7 +2113,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>confirmations.</span>
               </span>
             </h2>
-            <p className="landing-copy import-body mt-5 max-w-[760px]">
+            <p className="landing-copy import-body mt-5 max-w-[780px]">
               Onward keeps the useful details, flags what needs review, and leaves the source material intact.
             </p>
             <div className="mt-8 hidden lg:block">
@@ -2140,7 +2136,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>plan changes.</span>
               </span>
             </h2>
-            <p className="landing-copy mt-5 max-w-[460px] text-balance">
+            <p className="landing-copy mt-5 max-w-[780px] text-balance">
               The app keeps live context close to the Journey: leave-by prompts, saved tickets, document access, and clear review states.
             </p>
             <div className="mt-8 hidden lg:block">
@@ -2163,7 +2159,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>Plain about data.</span>
               </span>
             </h2>
-            <p className="landing-copy mt-5 max-w-[460px] text-balance">
+            <p className="landing-copy mt-5 max-w-[780px] text-balance">
               Reservation help stays practical: clear permissions, attached documents, and shared context without murky data promises.
             </p>
             <div className="mt-8 hidden lg:block">
