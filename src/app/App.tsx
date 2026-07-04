@@ -2136,7 +2136,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>plan changes.</span>
               </span>
             </h2>
-            <p className="landing-copy mt-5 max-w-[780px] text-balance">
+            <p className="landing-copy travel-day-body mt-5">
               The app keeps live context close to the Journey: leave-by prompts, saved tickets, document access, and clear review states.
             </p>
             <div className="mt-8 hidden lg:block">

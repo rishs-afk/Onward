@@ -664,6 +664,15 @@ body,
   width: 100%;
 }
 
+.travel-day-copy {
+  max-width: 940px;
+}
+
+.travel-day-body {
+  max-width: min(100%, 920px);
+  text-wrap: pretty;
+}
+
 .travel-day-board-wrap,
 .trust-panel-wrap {
   margin: 0 auto;
@@ -980,6 +989,10 @@ body,
     justify-content: space-between;
   }
 
+  .travel-day-copy .travel-day-body {
+    max-width: min(100%, 920px);
+  }
+
   .activity-card-group {
     grid-template-columns: repeat(var(--activity-count, 4), minmax(0, 400px));
     justify-content: center;
@@ -1000,6 +1013,12 @@ body,
 
   .activity-card-group .activity-image-card:nth-child(5n + 3) {
     margin-top: clamp(8px, 1.8vw, 34px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .travel-day-layout {
+    grid-template-columns: minmax(760px, 940px) minmax(0, 640px);
   }
 }
 
