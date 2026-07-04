@@ -457,10 +457,21 @@ body,
 
 .concept-layout {
   margin-inline: auto;
-  max-width: 1540px;
+  max-width: 1780px;
 }
 
 .concept-copy {
+  max-width: 940px;
+  min-width: 0;
+}
+
+.concept-visual {
+  max-width: 640px;
+  min-width: 0;
+}
+
+.journey-context-card,
+.journey-context-card > div {
   min-width: 0;
 }
 
@@ -553,16 +564,25 @@ body,
 }
 
 .concept-card-cluster {
-  grid-template-columns: repeat(2, minmax(0, 260px));
-  max-width: 590px;
+  gap: clamp(16px, 1.7vw, 26px);
+  grid-template-columns: repeat(3, minmax(0, 250px));
+  max-width: 830px;
+}
+
+.concept-card-cluster .activity-card-cluster-card {
+  max-width: 250px;
 }
 
 .concept-card-cluster .activity-card-cluster-card:nth-child(1) {
-  margin-top: clamp(20px, 2.4vw, 34px);
+  margin-top: clamp(26px, 2.6vw, 48px);
 }
 
 .concept-card-cluster .activity-card-cluster-card:nth-child(2) {
-  margin-top: clamp(58px, 6.4vw, 98px);
+  margin-top: clamp(64px, 5.4vw, 102px);
+}
+
+.concept-card-cluster .activity-card-cluster-card:nth-child(3) {
+  margin-top: clamp(38px, 3.5vw, 72px);
 }
 
 .timeline-card-row {
@@ -991,7 +1011,8 @@ body,
 
   .concept-layout {
     display: grid;
-    grid-template-columns: minmax(740px, 0.6fr) minmax(430px, 0.4fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    justify-content: space-between;
   }
 
   .travel-day-layout,
@@ -1028,6 +1049,7 @@ body,
 }
 
 @media (min-width: 1440px) {
+  .concept-layout,
   .travel-day-layout {
     grid-template-columns: minmax(760px, 940px) minmax(0, 640px);
   }

@@ -2057,7 +2057,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
       <LandingSection kind="concept" className="concept-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
         <div className="concept-layout flex w-full flex-col gap-6 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
           <div
-            className="concept-copy mx-auto w-full max-w-[840px] lg:mx-0 lg:max-w-[840px] lg:shrink lg:basis-[840px]"
+            className="concept-copy mx-auto w-full lg:mx-0 lg:shrink"
           >
             <p className="section-kicker mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]">Concept</p>
             <h2 className="landing-headline">
@@ -2071,10 +2071,10 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
               Onward is organised around the thing travellers actually need: one place for plans, documents, reminders, people, and review.
             </p>
             <div className="mt-8 hidden lg:block">
-              <ActivityCardCluster indices={[0, 7]} className="concept-card-cluster" />
+              <ActivityCardCluster indices={[0, 7, 6]} className="concept-card-cluster" />
             </div>
           </div>
-          <div className="mx-auto w-full max-w-[580px] lg:mx-0 lg:max-w-[580px] lg:shrink lg:basis-[580px]">
+          <div className="concept-visual mx-auto w-full lg:mx-0 lg:shrink">
             <JourneyContextRows />
           </div>
         </div>
