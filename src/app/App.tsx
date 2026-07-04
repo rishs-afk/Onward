@@ -2117,7 +2117,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
               Onward keeps the useful details, flags what needs review, and leaves the source material intact.
             </p>
             <div className="mt-8 hidden lg:block">
-              <ActivityCardCluster indices={[1, 2]} className="import-text-cluster" />
+              <ActivityCardCluster indices={[1, 2, 8]} className="import-text-cluster" />
             </div>
           </div>
           <div className="import-visual mx-auto w-full max-w-[660px] lg:mx-0 lg:shrink lg:basis-[660px]">
@@ -2140,7 +2140,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
               The app keeps live context close to the Journey: leave-by prompts, saved tickets, document access, and clear review states.
             </p>
             <div className="mt-8 hidden lg:block">
-              <ActivityCardCluster indices={[11, 17]} className="travel-day-card-cluster" />
+              <ActivityCardCluster indices={[11, 17, 22]} className="travel-day-card-cluster" />
             </div>
           </div>
           <div className="travel-day-board-wrap">
@@ -2163,7 +2163,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
               Reservation help stays practical: clear permissions, attached documents, and shared context without murky data promises.
             </p>
             <div className="mt-8 hidden lg:block">
-              <ActivityCardCluster indices={[7, 14]} className="trust-card-cluster" />
+              <ActivityCardCluster indices={[7, 14, 23]} className="trust-card-cluster" />
             </div>
           </div>
           <div className="trust-panel-wrap">
