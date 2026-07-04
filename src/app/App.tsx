@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowRight, Bell, Brain, CalendarClock,
   Clock, Compass, MailCheck, MapPin,
@@ -136,6 +137,8 @@ import {
   WalletLockedScreen, ReceiptUnreadableScreen, SplitNotBalancedScreen,
   SponsoredDisclosureScreen,
 } from "./phase5b";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ─── Shared UI (used only here) ───────────────────────────────────────────────
 
@@ -1035,12 +1038,6 @@ function AppNav({ surface, onSurfaceChange }: {
 }
 
 function JourneyArtwork() {
-  const shouldReduceMotion = useReducedMotion();
-  const popIn = (delay: number) => ({
-    initial: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.55, y: 14 },
-    animate: { opacity: 1, scale: 1, y: 0 },
-    transition: { duration: shouldReduceMotion ? 0.3 : 0.55, ease: [0.16, 1, 0.3, 1], delay: shouldReduceMotion ? 0 : delay },
-  });
   const timelineRows = [
     { title: "Train to Porto", detail: "Platform 2 · Seat 14A", time: "10:15", color: "#F5D142", icon: <Train size={14} /> },
     { title: "Hotel check-in", detail: "Confirmation ready", time: "15:00", color: "#6FA8F5", icon: <Hotel size={14} /> },
@@ -1050,11 +1047,6 @@ function JourneyArtwork() {
   return (
     <div className="relative mx-auto flex w-full max-w-[340px] flex-col items-center gap-5 sm:block sm:max-w-[760px] sm:min-h-[610px] lg:min-h-[650px] xl:max-w-[820px]">
       <div className="relative z-40 w-[276px] sm:absolute sm:left-1/2 sm:top-5 sm:w-[290px] sm:-translate-x-1/2 lg:w-[300px] xl:w-[318px]">
-        <motion.div
-          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.88, y: 24 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: shouldReduceMotion ? 0.3 : 0.75, ease: [0.16, 1, 0.3, 1], delay: shouldReduceMotion ? 0 : 0.35 }}
-        >
         <div className="onward-phone-shell hero-phone-shell aspect-[0.52/1]">
           <div className="onward-phone-screen px-4 pb-20 pt-12 sm:px-5 sm:pt-14">
             <div className="onward-phone-island" />
@@ -1108,13 +1100,11 @@ function JourneyArtwork() {
             </div>
           </div>
         </div>
-        </motion.div>
       </div>
 
-      <motion.div
+      <div
         className="onward-floating-card onward-reference-card hero-floating-card relative z-20 w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[12%] sm:max-w-none md:left-[3%] xl:left-[3%]"
         style={{ background: "#F2977A", "--hero-card-rotate": "-2deg" } as React.CSSProperties}
-        {...popIn(0.55)}
       >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
@@ -1125,12 +1115,11 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">Saved offline</p>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div
+      <div
         className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[40%] sm:block sm:max-w-none md:left-[3%] xl:left-[3%]"
         style={{ background: "#7FD8CB", "--hero-card-rotate": "1.5deg" } as React.CSSProperties}
-        {...popIn(0.63)}
       >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
@@ -1141,12 +1130,11 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">Plans pulled in</p>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div
+      <div
         className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:right-[2%] sm:top-[14%] sm:block sm:max-w-none md:right-[3%] xl:right-[3%]"
         style={{ background: "#6FA8F5", "--hero-card-rotate": "-1.5deg" } as React.CSSProperties}
-        {...popIn(0.71)}
       >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
@@ -1157,12 +1145,11 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">Lisbon today</p>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div
+      <div
         className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:right-[2%] sm:top-[42%] sm:block sm:max-w-none md:right-[3%] xl:right-[3%]"
         style={{ background: "#F5D142", "--hero-card-rotate": "1.5deg" } as React.CSSProperties}
-        {...popIn(0.79)}
       >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
@@ -1173,12 +1160,11 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">24 min to move</p>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div
+      <div
         className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3 sm:absolute sm:right-[2%] sm:top-[70%] sm:block sm:max-w-none md:right-[3%] xl:right-[3%]"
         style={{ background: "#FF9F45", "--hero-card-rotate": "-1.5deg" } as React.CSSProperties}
-        {...popIn(0.87)}
       >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
@@ -1189,12 +1175,11 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">Ref attached</p>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div
+      <div
         className="onward-floating-card onward-reference-card hero-floating-card relative z-20 hidden w-full max-w-[300px] p-3.5 sm:absolute sm:left-[2%] sm:top-[68%] sm:block sm:max-w-none md:left-[3%] xl:left-[3%]"
         style={{ background: "#A7A0E8", "--hero-card-rotate": "-1.5deg" } as React.CSSProperties}
-        {...popIn(0.95)}
       >
         <div className="flex items-center gap-3">
           <span className="hero-floating-icon flex shrink-0 items-center justify-center bg-[#080A0A] text-white">
@@ -1205,29 +1190,19 @@ function JourneyArtwork() {
             <p className="hero-floating-copy text-[#080A0A]/70">Ask in context</p>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
 
 function JourneyContextRows() {
-  const shouldReduceMotion = useReducedMotion();
-  const item = fadeUpItemVariants(shouldReduceMotion);
-
   return (
-    <motion.div
-      className="grid gap-4"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
-      variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.1)}
-    >
+    <div className="journey-context-rows grid gap-4">
       {APP_FEATURES.map((feature, index) => (
-        <motion.article
+        <article
           key={feature.title}
-          className="onward-reference-card flex gap-4 p-4 sm:gap-5 sm:p-5 xl:p-6"
+          className="journey-context-card onward-reference-card flex gap-4 p-4 sm:gap-5 sm:p-5 xl:p-6"
           style={{ background: APP_CARD_COLORS[index % APP_CARD_COLORS.length] }}
-          variants={item}
         >
           <div className="onward-icon-tile">
             {feature.icon}
@@ -1236,37 +1211,37 @@ function JourneyContextRows() {
             <h3 className="text-[18px] font-black leading-tight text-[#080A0A] sm:text-[24px]">{feature.title}</h3>
             <p className="mt-2 hidden text-[15px] font-bold leading-6 text-[#080A0A]/70 sm:block lg:text-[17px] lg:leading-7">{feature.copy}</p>
           </div>
-        </motion.article>
+        </article>
       ))}
-    </motion.div>
+    </div>
   );
 }
 
 function MiniTimeline() {
   const timelineItems = [
-    { time: "08:05", title: "Leave for station", detail: "Car reminder and route ready", icon: <Clock size={18} />, color: "#F2977A" },
-    { time: "10:15", title: "Train to Porto", detail: "Platform and ticket attached", icon: <Train size={18} />, color: "#F5D142" },
-    { time: "15:00", title: "Hotel check-in", detail: "Document saved offline", icon: <Hotel size={18} />, color: "#6FA8F5" },
+    { time: "08:05", title: "Leave for station", detail: "Car reminder and route ready", icon: <Clock size={22} />, color: "#F2977A" },
+    { time: "10:15", title: "Train to Porto", detail: "Platform and ticket attached", icon: <Train size={22} />, color: "#F5D142" },
+    { time: "15:00", title: "Hotel check-in", detail: "Document saved offline", icon: <Hotel size={22} />, color: "#6FA8F5" },
   ];
 
   return (
-    <div className="relative max-w-[620px] pl-16">
-      <div className="onward-timeline-line absolute bottom-6 left-6 top-6 w-1 rounded-full bg-[#080A0A]" />
-      <div className="grid gap-4">
+    <div className="mini-timeline relative w-full max-w-[760px] pl-[64px] sm:pl-[76px] lg:max-w-none lg:pl-[92px]">
+      <div className="mini-timeline-line onward-timeline-line absolute bottom-7 left-[22px] top-7 w-1 rounded-full bg-[#080A0A] sm:left-[26px] lg:left-[30px] lg:w-[5px]" />
+      <div className="grid gap-4 lg:gap-5">
         {timelineItems.map((item) => (
           <article
             key={item.title}
-            className="relative rounded-[32px] border-2 border-[#080A0A] p-4 text-[#080A0A] shadow-[8px_8px_0_rgba(8,10,10,0.14)] sm:p-5"
+            className="mini-timeline-card relative rounded-[34px] border-2 border-[#080A0A] p-5 text-[#080A0A] shadow-[8px_8px_0_rgba(8,10,10,0.14)] sm:px-6 sm:py-5 lg:rounded-[38px] lg:px-7 lg:py-5 lg:shadow-[12px_12px_0_rgba(8,10,10,0.14)]"
             style={{ background: item.color }}
           >
-            <span className="absolute left-[-64px] top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[18px] border-2 border-[#080A0A] bg-[#080A0A] text-white">
+            <span className="mini-timeline-icon absolute left-[-64px] top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[18px] border-2 border-[#080A0A] bg-[#080A0A] text-white sm:left-[-76px] sm:h-14 sm:w-14 sm:rounded-[20px] lg:left-[-92px] lg:h-16 lg:w-16 lg:rounded-[24px]">
               {item.icon}
             </span>
-            <div className="grid gap-2 sm:grid-cols-[86px_1fr] sm:items-center">
-              <p className="text-[14px] font-black leading-none">{item.time}</p>
+            <div className="grid gap-3 sm:grid-cols-[104px_1fr] sm:items-center lg:grid-cols-[118px_1fr]">
+              <p className="text-[16px] font-black leading-none lg:text-[18px]">{item.time}</p>
               <div>
-                <h3 className="text-[18px] font-black leading-tight sm:text-[21px]">{item.title}</h3>
-                <p className="mt-1 text-[13px] font-bold leading-5 text-[#080A0A]/70 sm:text-[14px]">{item.detail}</p>
+                <h3 className="text-[22px] font-black leading-tight sm:text-[26px] lg:text-[30px]">{item.title}</h3>
+                <p className="mt-2 text-[15px] font-bold leading-6 text-[#080A0A]/70 lg:text-[17px]">{item.detail}</p>
               </div>
             </div>
           </article>
@@ -1278,27 +1253,27 @@ function MiniTimeline() {
 
 function ImportFlowPanel() {
   return (
-    <div className="relative max-w-[620px] pl-16">
-      <div className="grid gap-4">
+    <div className="import-flow-panel relative max-w-[700px] pl-[72px]">
+      <div className="grid gap-5">
         {APP_IMPORT_FLOW.map((item, index) => (
           <article
             key={item.title}
-            className="onward-reference-card relative p-4 sm:p-5"
+            className="import-flow-card onward-reference-card relative min-h-[128px] px-5 py-5 sm:min-h-[140px] sm:px-6 sm:py-6 lg:min-h-[148px] lg:px-7 lg:py-6"
             style={{ background: APP_FLOW_COLORS[index % APP_FLOW_COLORS.length] }}
           >
             {index < APP_IMPORT_FLOW.length - 1 && (
               <div
-                className="absolute left-[-40px] top-1/2 z-0 w-1 -translate-x-1/2 rounded-full bg-[#080A0A]"
-                style={{ height: "calc(100% + 1rem)" }}
+                className="import-flow-connector absolute left-[-44px] top-1/2 z-0 w-1 -translate-x-1/2 rounded-full bg-[#080A0A]"
+                style={{ height: "calc(100% + 1.25rem)" }}
               />
             )}
-            <div className="absolute left-[-64px] top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[18px] border-2 border-[#080A0A] bg-[#080A0A] text-[12px] font-black text-white">
+            <div className="import-flow-node absolute left-[-72px] top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-[20px] border-2 border-[#080A0A] bg-[#080A0A] text-[13px] font-black text-white lg:h-16 lg:w-16 lg:rounded-[24px] lg:text-[14px]">
               {String(index + 1).padStart(2, "0")}
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#080A0A]/65">{item.label}</p>
-              <h3 className="mt-1 text-[17px] font-black leading-tight text-[#080A0A]">{item.title}</h3>
-              <p className="mt-1 hidden text-[13px] font-bold leading-5 text-[#080A0A]/70 sm:block">{item.copy}</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.14em] text-[#080A0A]/65 lg:text-[12px]">{item.label}</p>
+              <h3 className="mt-2 text-[20px] font-black leading-tight text-[#080A0A] lg:text-[24px]">{item.title}</h3>
+              <p className="mt-2 hidden text-[14px] font-bold leading-6 text-[#080A0A]/70 sm:block lg:text-[16px]">{item.copy}</p>
             </div>
           </article>
         ))}
@@ -1309,11 +1284,11 @@ function ImportFlowPanel() {
 
 function DayContextPanel() {
   return (
-    <div className="grid gap-4">
+    <div className="day-context-panel grid gap-4">
       {APP_DAY_CONTEXT.map((item, index) => (
         <article
           key={item.title}
-          className="rounded-[30px] border-2 border-[#080A0A] p-4 text-[#080A0A] shadow-[6px_6px_0_rgba(8,10,10,0.12)] sm:p-5"
+          className="day-context-card rounded-[30px] border-2 border-[#080A0A] p-4 text-[#080A0A] shadow-[6px_6px_0_rgba(8,10,10,0.12)] sm:p-5"
           style={{ background: ["#F2977A", "#F5D142", "#6FA8F5"][index] }}
         >
           <div className="mb-3 flex items-start justify-between gap-4">
@@ -1321,7 +1296,7 @@ function DayContextPanel() {
               <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#080A0A]/65">{item.label}</p>
               <h3 className="mt-1 text-[18px] font-black leading-tight">{item.title}</h3>
             </div>
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#080A0A] text-white">
+            <span className="day-context-icon flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#080A0A] text-white">
               {item.icon}
             </span>
           </div>
@@ -1413,24 +1388,22 @@ function TrustPanel() {
   );
 }
 
-function ActivityImageCard({ image, activity, index, className, variants }: {
+function ActivityImageCard({ image, activity, index, className }: {
   image: { src: string; name: string };
   activity: typeof LANDING_ACTIVITIES[number];
   index: number;
   className?: string;
-  variants?: Record<string, unknown>;
 }) {
   const tilt = [-2.5, 1.6, -1.2, 2.2, -1.8, 1.1][index % 6];
 
   return (
-    <motion.article
+    <article
       className={cn("activity-image-card", className)}
       style={{
         "--activity-bg": APP_CARD_COLORS[index % APP_CARD_COLORS.length],
         "--activity-progress": activity.progress,
         "--activity-tilt": `${tilt}deg`,
       } as React.CSSProperties}
-      variants={variants}
     >
       <div className="activity-image-frame">
         <img
@@ -1453,14 +1426,13 @@ function ActivityImageCard({ image, activity, index, className, variants }: {
           <span />
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 }
 
-function ActivityCardSlot({ index, className, variants }: {
+function ActivityCardSlot({ index, className }: {
   index: number;
   className?: string;
-  variants?: Record<string, unknown>;
 }) {
   const image = ACTIVITY_IMAGES[index];
   if (!image) return null;
@@ -1471,7 +1443,6 @@ function ActivityCardSlot({ index, className, variants }: {
       activity={LANDING_ACTIVITIES[index % LANDING_ACTIVITIES.length]}
       index={index}
       className={className}
-      variants={variants}
     />
   );
 }
@@ -1481,17 +1452,8 @@ function ActivityCardCluster({ indices, className, routeLine }: {
   className?: string;
   routeLine?: boolean;
 }) {
-  const shouldReduceMotion = useReducedMotion();
-  const cardVariants = fadeUpItemVariants(shouldReduceMotion);
-
   return (
-    <motion.div
-      className={cn("activity-card-cluster", className)}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
-      variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.15)}
-    >
+    <div className={cn("activity-card-cluster", className)}>
       {routeLine && (
         <svg
           className="timeline-route-line"
@@ -1500,6 +1462,7 @@ function ActivityCardCluster({ indices, className, routeLine }: {
           aria-hidden="true"
         >
           <path
+            className="timeline-route-path"
             d="M135,151 C318,151 318,194 501,194 C680,194 680,151 859,151 C1042,151 1042,194 1225,194"
             fill="none"
             stroke="#080A0A"
@@ -1515,10 +1478,9 @@ function ActivityCardCluster({ indices, className, routeLine }: {
           key={index}
           index={index}
           className="activity-card-aside activity-card-cluster-card"
-          variants={cardVariants}
         />
       ))}
-    </motion.div>
+    </div>
   );
 }
 
@@ -1688,91 +1650,343 @@ function useSectionScroll() {
   return containerRef;
 }
 
-function staggerContainerVariants(staggerChildren: number, delayChildren = 0) {
-  return {
-    hidden: {},
-    visible: { transition: { staggerChildren, delayChildren } },
-  };
+function usePrefersReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setPrefersReducedMotion(query.matches);
+
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return prefersReducedMotion;
 }
 
-function fadeUpItemVariants(shouldReduceMotion: boolean | null) {
-  return {
-    hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 22 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: shouldReduceMotion ? 0.3 : 0.7, ease: [0.16, 1, 0.3, 1] },
-    },
-  };
+function useLandingGsap(containerRef: React.RefObject<HTMLElement | null>, prefersReducedMotion: boolean) {
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      const sections = gsap.utils.toArray<HTMLElement>("[data-gsap-section]", container);
+      const hero = container.querySelector<HTMLElement>(".hero-section");
+
+      gsap.set(container, { "--dot-x": "0px", "--dot-y": "0px" });
+
+      if (prefersReducedMotion) {
+        gsap.set(sections, { autoAlpha: 1, clearProps: "transform,filter,clipPath" });
+        return;
+      }
+
+      gsap.to(container, {
+        "--dot-x": "22px",
+        "--dot-y": "22px",
+        duration: 22,
+        ease: "none",
+        repeat: -1,
+      });
+
+      if (hero) {
+        const heroCards = gsap.utils.toArray<HTMLElement>(".hero-floating-card", hero);
+        const phoneBits = gsap.utils.toArray<HTMLElement>(".hero-phone-shell .onward-phone-screen > *", hero);
+        const heroTl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+        heroTl
+          .fromTo(
+            hero.querySelectorAll(".hero-brand-row, .hero-headline-line"),
+            { autoAlpha: 0, yPercent: 115, skewY: 4, clipPath: "inset(0 0 100% 0)" },
+            { autoAlpha: 1, yPercent: 0, skewY: 0, clipPath: "inset(0 0 0% 0)", duration: 0.78, stagger: 0.075 }
+          )
+          .fromTo(
+            hero.querySelector(".hero-copy-text"),
+            { autoAlpha: 0, y: 38, filter: "blur(10px)" },
+            { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.72 },
+            "-=0.42"
+          )
+          .fromTo(
+            hero.querySelector(".hero-primary-cta"),
+            { autoAlpha: 0, y: 28, scale: 0.82 },
+            { autoAlpha: 1, y: 0, scale: 1, duration: 0.58, ease: "back.out(2.4)" },
+            "-=0.36"
+          )
+          .fromTo(
+            hero.querySelector(".hero-phone-shell"),
+            { autoAlpha: 0, x: 96, y: 66, scale: 0.72, rotation: -8, filter: "blur(12px)" },
+            { autoAlpha: 1, x: 0, y: 0, scale: 1, rotation: 0, filter: "blur(0px)", duration: 1.05, ease: "elastic.out(1, 0.72)" },
+            "-=0.86"
+          )
+          .fromTo(
+            phoneBits,
+            { autoAlpha: 0, y: 24, scale: 0.94 },
+            { autoAlpha: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.045 },
+            "-=0.52"
+          )
+          .fromTo(
+            heroCards,
+            {
+              autoAlpha: 0,
+              scale: 0.2,
+              x: (index) => [-120, -90, 120, 130, 150, -130][index % 6],
+              y: (index) => [70, 30, 55, -20, 40, -55][index % 6],
+              rotation: (index) => [-18, 13, 20, -12, 16, -16][index % 6],
+            },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              x: 0,
+              y: 0,
+              rotation: 0,
+              duration: 0.74,
+              stagger: 0.075,
+              ease: "back.out(2.8)",
+            },
+            "-=0.72"
+          )
+          .fromTo(
+            hero.querySelectorAll(".activity-progress-track span"),
+            { scaleX: 0, transformOrigin: "left center" },
+            { scaleX: 1, duration: 0.8, stagger: 0.04 },
+            "-=0.52"
+          );
+
+        const heroAmbientDelay = heroTl.duration() + 0.12;
+
+        gsap.to(hero.querySelector(".hero-phone-shell"), {
+          y: -10,
+          rotation: 0.8,
+          duration: 4.8,
+          delay: heroAmbientDelay,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+
+        gsap.to(heroCards, {
+          y: (index) => (index % 2 === 0 ? -9 : 9),
+          x: (index) => (index % 3 === 0 ? 5 : -5),
+          rotation: (index) => (index % 2 === 0 ? 1.4 : -1.4),
+          duration: (index) => 4.2 + index * 0.22,
+          delay: heroAmbientDelay,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          stagger: 0.08,
+        });
+      }
+
+      sections
+        .filter((section) => section !== hero)
+        .forEach((section) => {
+          const kind = section.dataset.gsapKind;
+          const text = section.querySelectorAll(".section-kicker, .landing-headline-line, .landing-copy");
+          const cards = section.querySelectorAll(
+            ".feature-badge, .journey-context-card, .activity-image-card, .mini-timeline-card, .import-flow-card, .day-context-card, .travel-day-board, .trust-panel, .trust-point-card, .travel-day-mini-card, .trust-stat-row > div"
+          );
+          const icons = section.querySelectorAll(".onward-icon-tile, .activity-icon, .mini-timeline-icon, .import-flow-node, .day-context-icon, .travel-day-mini-card span, .trust-point-card span");
+          const progressBars = section.querySelectorAll(".activity-progress-track span");
+
+          gsap.set(section, {
+            autoAlpha: 0,
+            y: 84,
+            scale: 0.965,
+            rotationX: 5,
+            transformPerspective: 1000,
+            transformOrigin: "center top",
+            filter: "saturate(0.65) blur(7px)",
+          });
+          gsap.set(text, { autoAlpha: 0, y: 42, skewY: 3, clipPath: "inset(0 0 100% 0)" });
+          gsap.set(cards, {
+            autoAlpha: 0,
+            y: 76,
+            scale: 0.82,
+            rotation: (index) => [-5, 4, -3, 5, -4][index % 5],
+            transformOrigin: "center center",
+          });
+          gsap.set(icons, { scale: 0.2, rotation: -24, autoAlpha: 0 });
+          gsap.set(progressBars, { scaleX: 0, transformOrigin: "left center" });
+
+          const tl = gsap.timeline({ paused: true, defaults: { ease: "power4.out" } });
+          tl.to(section, {
+            autoAlpha: 1,
+            y: 0,
+            scale: 1,
+            rotationX: 0,
+            filter: "saturate(1) blur(0px)",
+            duration: 0.72,
+          })
+            .to(text, {
+              autoAlpha: 1,
+              y: 0,
+              skewY: 0,
+              clipPath: "inset(0 0 0% 0)",
+              duration: 0.62,
+              stagger: 0.055,
+            }, "-=0.5")
+            .to(cards, {
+              autoAlpha: 1,
+              y: 0,
+              scale: 1,
+              rotation: 0,
+              duration: 0.64,
+              stagger: 0.07,
+              ease: "back.out(1.9)",
+            }, "-=0.38")
+            .to(icons, {
+              autoAlpha: 1,
+              scale: 1,
+              rotation: 0,
+              duration: 0.42,
+              stagger: 0.035,
+              ease: "back.out(2.8)",
+            }, "-=0.52")
+            .to(progressBars, {
+              scaleX: 1,
+              duration: 0.72,
+              stagger: 0.055,
+            }, "-=0.42");
+
+          if (kind === "timeline") {
+            tl.fromTo(
+              section.querySelector(".mini-timeline-line"),
+              { scaleY: 0, transformOrigin: "top center" },
+              { scaleY: 1, duration: 0.75, ease: "expo.out" },
+              "-=0.82"
+            ).fromTo(
+              section.querySelector(".timeline-route-path"),
+              { autoAlpha: 0, strokeDashoffset: 190 },
+              { autoAlpha: 1, strokeDashoffset: -40, duration: 1.45, ease: "power2.out" },
+              "-=0.58"
+            );
+          }
+
+          if (kind === "import") {
+            tl.fromTo(
+              section.querySelectorAll(".import-flow-connector"),
+              { scaleY: 0, transformOrigin: "top center" },
+              { scaleY: 1, duration: 0.55, stagger: 0.09, ease: "expo.out" },
+              "-=0.7"
+            ).fromTo(
+              section.querySelectorAll(".import-flow-node"),
+              { scale: 0, rotation: -160 },
+              { scale: 1, rotation: 0, duration: 0.46, stagger: 0.08, ease: "back.out(3)" },
+              "-=0.74"
+            );
+          }
+
+          if (kind === "travel") {
+            tl.fromTo(
+              section.querySelector(".travel-day-count"),
+              { scale: 0.45, rotation: -12 },
+              { scale: 1, rotation: 0, duration: 0.62, ease: "elastic.out(1, 0.55)" },
+              "-=0.82"
+            ).to(
+              section.querySelectorAll(".day-context-card"),
+              { x: (index) => [0, 18, -18][index % 3], duration: 0.32, yoyo: true, repeat: 1, stagger: 0.05, ease: "sine.inOut" },
+              "-=0.4"
+            );
+          }
+
+          if (kind === "trust") {
+            tl.fromTo(
+              section.querySelectorAll(".trust-point-card"),
+              { rotationY: -18, transformPerspective: 900 },
+              { rotationY: 0, duration: 0.62, stagger: 0.07, ease: "back.out(1.8)" },
+              "-=0.62"
+            );
+          }
+
+          ScrollTrigger.create({
+            trigger: section,
+            scroller: container,
+            start: "top 78%",
+            once: true,
+            onEnter: () => tl.play(0),
+          });
+        });
+
+      const refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 250);
+      return () => window.clearTimeout(refreshTimer);
+    }, container);
+
+    return () => ctx.revert();
+  }, [containerRef, prefersReducedMotion]);
 }
 
-function popUpItemVariants(shouldReduceMotion: boolean | null) {
-  return {
-    hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.75, y: 10 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { duration: shouldReduceMotion ? 0.3 : 0.45, ease: [0.16, 1, 0.3, 1] },
-    },
-  };
+function LandingSection({ id, className, children, kind }: {
+  id?: string;
+  className?: string;
+  children: React.ReactNode;
+  kind?: string;
+}) {
+  return (
+    <section
+      id={id}
+      className={cn("onward-section gsap-section", className)}
+      data-gsap-section
+      data-gsap-kind={kind}
+    >
+      {children}
+    </section>
+  );
 }
 
-function slideInItemVariants(shouldReduceMotion: boolean | null, fromX: number) {
-  return {
-    hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: fromX },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: shouldReduceMotion ? 0.3 : 0.7, ease: [0.16, 1, 0.3, 1] },
-    },
-  };
+function LandingFooter({ id, className, children }: {
+  id?: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <footer
+      id={id}
+      className={className}
+      data-gsap-section
+      data-gsap-kind="footer"
+    >
+      {children}
+    </footer>
+  );
 }
 
 function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
   const sectionScrollRef = useSectionScroll();
-  const shouldReduceMotion = useReducedMotion();
-  const fadeUpItem = fadeUpItemVariants(shouldReduceMotion);
-  const popUpItem = popUpItemVariants(shouldReduceMotion);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  useLandingGsap(sectionScrollRef, prefersReducedMotion);
 
   return (
     <main ref={sectionScrollRef} className="onward-landing text-[#080A0A]">
-      <section className="onward-section relative grid content-center items-center justify-center gap-9 overflow-hidden bg-[#F9EFD1] px-5 py-7 sm:gap-10 sm:px-8 sm:py-9 lg:grid-cols-[0.78fr_1.22fr] lg:gap-7 lg:px-10 xl:gap-8">
-        <motion.div
+      <LandingSection kind="hero" className="hero-section relative grid content-center items-center justify-center gap-9 overflow-hidden bg-[#F9EFD1] px-5 py-7 sm:gap-10 sm:px-8 sm:py-9 lg:grid-cols-[0.78fr_1.22fr] lg:gap-7 lg:px-10 xl:gap-8">
+        <div
           className="hero-copy-block relative z-10 mx-auto w-full max-w-[540px] lg:max-w-[600px] lg:justify-self-end"
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.12, shouldReduceMotion ? 0 : 0.15)}
         >
-          <motion.div className="hero-brand-row" variants={fadeUpItem}>
+          <div className="hero-brand-row">
             <p
               className="hero-brand-word text-[38px] leading-none lg:text-[48px]"
               style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
             >
               Onward
             </p>
-          </motion.div>
-          <motion.h1
+          </div>
+          <h1
             className="hero-headline max-w-[620px] text-[44px] font-black leading-[1.04] text-[#080A0A] sm:text-[58px] xl:text-[64px]"
-            variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.09)}
           >
-            <motion.span className="hero-headline-line" variants={fadeUpItem}>Every step of</motion.span>
-            <motion.span className="hero-headline-line" variants={fadeUpItem}>the journey,</motion.span>
-            <motion.span
+            <span className="hero-headline-line">Every step of</span>
+            <span className="hero-headline-line">the journey,</span>
+            <span
               className="hero-script-highlight hero-headline-line"
               style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
-              variants={fadeUpItem}
             >
               calmly organised.
-            </motion.span>
-          </motion.h1>
-          <motion.p
+            </span>
+          </h1>
+          <p
             className="hero-copy-text mt-6 max-w-[500px] text-[19px] font-normal leading-7 text-[#68757B] sm:text-[20px] sm:leading-8"
-            variants={fadeUpItem}
           >
             From the flight to the last cup of coffee, your plans, documents, and next moves stay clear and ready, wherever your Journey takes you.
-          </motion.p>
-          <motion.div className="hero-cta-row mt-11 flex flex-wrap gap-3" variants={fadeUpItem}>
+          </p>
+          <div className="hero-cta-row mt-11 flex flex-wrap gap-3">
             <a
               href="#timeline"
               className="hero-primary-cta flex items-center justify-center gap-3 rounded-full bg-[#080A0A] text-white transition-transform hover:-translate-y-0.5"
@@ -1780,46 +1994,36 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
               See the Journey
               <ArrowRight size={22} />
             </a>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
         <div className="relative z-10 mx-auto w-full max-w-[760px] lg:mx-0 lg:max-w-[820px] lg:justify-self-end">
           <JourneyArtwork />
         </div>
-      </section>
+      </LandingSection>
 
-      <section className="onward-section flex items-center justify-center bg-[#F9EFD1] px-5 py-10 sm:px-8 lg:px-12">
+      <LandingSection kind="feature-cloud" className="flex items-center justify-center bg-[#F9EFD1] px-5 py-10 sm:px-8 lg:px-12">
         <div className="feature-cloud-layout">
-          <motion.div
+          <div
             className="feature-cloud-card feature-cloud-card-left"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
-            variants={slideInItemVariants(shouldReduceMotion, -40)}
           >
             <ActivityCardSlot index={15} className="activity-card-aside" />
-          </motion.div>
-          <motion.div
+          </div>
+          <div
             className="feature-cloud-copy"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
-            variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.1)}
           >
-            <motion.h2
+            <h2
               className="landing-headline mx-auto max-w-[760px]"
-              variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.09)}
             >
-              <motion.span className="landing-headline-line" variants={fadeUpItem}>Turn your travel chaos</motion.span>
-              <motion.span className="landing-headline-line" variants={fadeUpItem}>
+              <span className="landing-headline-line">Turn your travel chaos</span>
+              <span className="landing-headline-line">
                 into{" "}
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>
                   calm confidence.
                 </span>
-              </motion.span>
-            </motion.h2>
-            <motion.div
+              </span>
+            </h2>
+            <div
               className="mx-auto mt-10 flex max-w-[900px] flex-wrap items-center justify-center gap-3"
-              variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.045, shouldReduceMotion ? 0 : 0.15)}
             >
               {[
                 { label: "Real-Time Updates", icon: <Clock size={14} />, color: "#F2977A" },
@@ -1835,64 +2039,55 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 { label: "Stays Tracked", icon: <Hotel size={14} />, color: "#D45BA0" },
                 { label: "Every Transport Type", icon: <Train size={14} />, color: "#F2B27A" },
               ].map((badge) => (
-                <motion.span
+                <span
                   key={badge.label}
-                  className="flex items-center gap-2 rounded-full border-2 border-[#080A0A] px-4 py-2 text-[12px] font-black uppercase tracking-[0.04em] text-[#080A0A] shadow-[3px_3px_0_rgba(8,10,10,0.16)]"
+                  className="feature-badge flex items-center gap-2 rounded-full border-2 border-[#080A0A] px-4 py-2 text-[12px] font-black uppercase tracking-[0.04em] text-[#080A0A] shadow-[3px_3px_0_rgba(8,10,10,0.16)]"
                   style={{ background: badge.color }}
-                  variants={popUpItem}
                 >
                   {badge.icon}
                   {badge.label}
-                </motion.span>
+                </span>
               ))}
-            </motion.div>
-          </motion.div>
-          <motion.div
+            </div>
+          </div>
+          <div
             className="feature-cloud-card feature-cloud-card-right"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
-            variants={slideInItemVariants(shouldReduceMotion, 40)}
           >
             <ActivityCardSlot index={18} className="activity-card-aside" />
-          </motion.div>
+          </div>
         </div>
-      </section>
+      </LandingSection>
 
-      <section className="onward-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
-        <div className="flex w-full flex-col gap-6 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
-          <motion.div
-            className="mx-auto w-full max-w-[560px] lg:mx-0 lg:max-w-[560px] lg:shrink lg:basis-[560px]"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
-            variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.12, shouldReduceMotion ? 0 : 0.05)}
+      <LandingSection kind="concept" className="concept-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
+        <div className="concept-layout flex w-full flex-col gap-6 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+          <div
+            className="concept-copy mx-auto w-full max-w-[760px] lg:mx-0 lg:max-w-[760px] lg:shrink lg:basis-[760px]"
           >
-            <motion.p className="mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]" variants={fadeUpItem}>Concept</motion.p>
-            <motion.h2 className="landing-headline" variants={staggerContainerVariants(shouldReduceMotion ? 0 : 0.09)}>
-              <motion.span className="landing-headline-line" variants={fadeUpItem}>A Journey is</motion.span>
-              <motion.span className="landing-headline-line" variants={fadeUpItem}>
+            <p className="section-kicker mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]">Concept</p>
+            <h2 className="landing-headline">
+              <span className="landing-headline-line">A Journey is</span>
+              <span className="landing-headline-line">
                 the{" "}
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>home base.</span>
-              </motion.span>
-            </motion.h2>
-            <motion.p className="landing-copy mt-5 max-w-[440px] text-balance" variants={fadeUpItem}>
+              </span>
+            </h2>
+            <p className="landing-copy mt-5 max-w-[700px] text-balance">
               Onward is organised around the thing travellers actually need: one place for plans, documents, reminders, people, and review.
-            </motion.p>
+            </p>
             <div className="mt-8 hidden lg:block">
               <ActivityCardCluster indices={[0, 7]} className="concept-card-cluster" />
             </div>
-          </motion.div>
+          </div>
           <div className="mx-auto w-full max-w-[580px] lg:mx-0 lg:max-w-[580px] lg:shrink lg:basis-[580px]">
             <JourneyContextRows />
           </div>
         </div>
-      </section>
+      </LandingSection>
 
-      <section id="timeline" className="onward-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
-        <div className="mx-auto flex w-full flex-col gap-6 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
-          <div className="mx-auto w-full max-w-[560px] lg:mx-0 lg:max-w-[560px] lg:shrink lg:basis-[560px]">
-            <p className="mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Timeline</p>
+      <LandingSection id="timeline" kind="timeline" className="timeline-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
+        <div className="timeline-layout mx-auto flex w-full flex-col gap-6 sm:gap-10 lg:gap-16">
+          <div className="timeline-copy mx-auto w-full max-w-[620px] lg:mx-0">
+            <p className="section-kicker mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Timeline</p>
             <h2 className="landing-headline">
               <span className="landing-headline-line">Know what</span>
               <span className="landing-headline-line">
@@ -1900,45 +2095,45 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>next.</span>
               </span>
             </h2>
-            <p className="landing-copy mt-5 max-w-[440px] text-balance">
+            <p className="landing-copy mt-5 max-w-[560px] text-balance">
               Flights, stays, trains, documents, and reminders sit in one ordered Journey Timeline.
             </p>
           </div>
-          <div className="mx-auto w-full max-w-[560px] lg:mx-0 lg:max-w-[560px] lg:shrink lg:basis-[560px]">
+          <div className="timeline-visual mx-auto w-full max-w-[860px] lg:mx-0">
             <MiniTimeline />
           </div>
         </div>
         <ActivityCardCluster indices={[1, 2, 3, 4]} className="timeline-card-row" routeLine />
-      </section>
+      </LandingSection>
 
-      <section className="onward-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
-        <div className="flex w-full flex-col gap-6 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
-          <div className="mx-auto w-full max-w-[560px] lg:mx-0 lg:max-w-[560px] lg:shrink lg:basis-[560px]">
-            <p className="mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]">Import and review</p>
-            <h2 className="landing-headline">
+      <LandingSection kind="import" className="import-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
+        <div className="import-layout flex w-full flex-col gap-6 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+          <div className="import-copy mx-auto w-full max-w-[840px] lg:mx-0 lg:shrink lg:basis-[840px]">
+            <p className="section-kicker mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]">Import and review</p>
+            <h2 className="landing-headline import-heading">
               <span className="landing-headline-line">No more digging</span>
               <span className="landing-headline-line">
                 through{" "}
                 <span className="hero-script-highlight" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>confirmations.</span>
               </span>
             </h2>
-            <p className="landing-copy mt-5 max-w-[520px]">
+            <p className="landing-copy import-body mt-5 max-w-[760px]">
               Onward keeps the useful details, flags what needs review, and leaves the source material intact.
             </p>
             <div className="mt-8 hidden lg:block">
               <ActivityCardCluster indices={[1, 2]} className="import-text-cluster" />
             </div>
           </div>
-          <div className="mx-auto w-full max-w-[620px] lg:mx-0 lg:max-w-[620px] lg:shrink lg:basis-[620px]">
+          <div className="import-visual mx-auto w-full max-w-[660px] lg:mx-0 lg:shrink lg:basis-[660px]">
             <ImportFlowPanel />
           </div>
         </div>
-      </section>
+      </LandingSection>
 
-      <section className="onward-section travel-day-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
+      <LandingSection kind="travel" className="travel-day-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
         <div className="travel-day-layout">
           <div className="travel-day-copy">
-            <p className="mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Travel day</p>
+            <p className="section-kicker mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Travel day</p>
             <h2 className="landing-headline">
               <span className="landing-headline-line">Calm when the</span>
               <span className="landing-headline-line">
@@ -1956,12 +2151,12 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
             <TravelDayBoard />
           </div>
         </div>
-      </section>
+      </LandingSection>
 
-      <section className="onward-section trust-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
+      <LandingSection kind="trust" className="trust-section flex flex-col items-center justify-center gap-6 bg-[#F9EFD1] px-5 py-5 sm:gap-10 sm:px-8 sm:py-8 lg:px-10">
         <div className="trust-layout">
           <div className="trust-copy">
-            <p className="mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Trust</p>
+            <p className="section-kicker mb-3 text-[13px] font-black uppercase tracking-[0.14em] text-[#080A0A]">Trust</p>
             <h2 className="landing-headline">
               <span className="landing-headline-line">Useful under pressure.</span>
               <span className="landing-headline-line">
@@ -1979,9 +2174,9 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
             <TrustPanel />
           </div>
         </div>
-      </section>
+      </LandingSection>
 
-      <footer id="contact" className="onward-footer border-t-2 border-[#080A0A] bg-[#080A0A] py-10 text-[#F8FAF8]">
+      <LandingFooter id="contact" className="onward-footer border-t-2 border-[#080A0A] bg-[#080A0A] py-10 text-[#F8FAF8]">
         <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-10">
           <div className="footer-main">
             <div className="footer-brand">
@@ -2036,7 +2231,7 @@ function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
             ))}
           </div>
         </div>
-      </footer>
+      </LandingFooter>
     </main>
   );
 }

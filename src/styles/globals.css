@@ -2,10 +2,17 @@
   --onward-header-height: 70px;
 }
 
+html,
+body,
+#root {
+  overflow-x: hidden;
+}
+
 .onward-landing {
   height: calc(100svh - var(--onward-header-height, 70px));
   background-color: #f9efd1;
   background-image: radial-gradient(rgba(8, 10, 10, 0.09) 1.2px, transparent 1.2px);
+  background-position: var(--dot-x, 0) var(--dot-y, 0);
   background-size: 22px 22px;
   overscroll-behavior-y: contain;
   overflow-x: hidden;
@@ -15,7 +22,63 @@
 .onward-section {
   min-height: calc(100svh - var(--onward-header-height, 70px));
   background-image: radial-gradient(rgba(8, 10, 10, 0.09) 1.2px, transparent 1.2px);
+  background-position: var(--dot-x, 0) var(--dot-y, 0);
   background-size: 22px 22px;
+  transform-style: preserve-3d;
+}
+
+.gsap-section {
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: opacity, transform, filter;
+}
+
+.hero-section {
+  isolation: isolate;
+}
+
+.section-kicker,
+.landing-copy,
+.hero-copy-text,
+.hero-brand-row,
+.hero-headline-line,
+.landing-headline-line {
+  backface-visibility: hidden;
+  transform-origin: left bottom;
+  will-change: opacity, transform, clip-path, filter;
+}
+
+.feature-badge,
+.journey-context-card,
+.activity-image-card,
+.mini-timeline-card,
+.import-flow-card,
+.day-context-card,
+.travel-day-board,
+.trust-panel,
+.trust-point-card,
+.travel-day-mini-card,
+.trust-stat-row > div,
+.hero-floating-card,
+.hero-phone-shell {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: opacity, transform, filter;
+}
+
+.mini-timeline-line,
+.import-flow-connector {
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.timeline-route-path {
+  stroke-dashoffset: 0;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.hero-copy-block {
+  --hero-body-gap: clamp(32px, 6vw, 40px);
 }
 
 @media (min-width: 1024px) {
@@ -26,7 +89,7 @@
   }
 
   .hero-copy-block {
-    --hero-body-gap: clamp(18px, 2.2vh, 24px);
+    --hero-body-gap: clamp(30px, 3.2vh, 38px);
     --hero-outer-gap: clamp(88px, 9vh, 104px);
     display: flex;
     flex-direction: column;
@@ -166,8 +229,31 @@
     0 10px 18px rgba(8, 10, 10, 0.1);
   font-size: 17px;
   font-weight: 900;
+  isolation: isolate;
   min-height: 58px;
+  overflow: hidden;
   padding: 0 32px;
+  position: relative;
+}
+
+.hero-primary-cta::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  content: "";
+  inset: -30% auto -30% -42%;
+  position: absolute;
+  transform: translateX(-120%) skewX(-18deg);
+  width: 36%;
+  z-index: -1;
+}
+
+.hero-primary-cta:hover::after {
+  animation: onward-cta-sheen 680ms ease;
+}
+
+@keyframes onward-cta-sheen {
+  to {
+    transform: translateX(430%) skewX(-18deg);
+  }
 }
 
 .onward-icon-tile {
@@ -328,6 +414,35 @@
   transform: translateY(0);
 }
 
+.concept-layout {
+  margin-inline: auto;
+  max-width: 1320px;
+}
+
+.concept-copy {
+  min-width: 0;
+}
+
+.timeline-layout {
+  margin-inline: auto;
+  max-width: 1820px;
+}
+
+.timeline-copy,
+.timeline-visual {
+  min-width: 0;
+}
+
+.import-layout {
+  margin-inline: auto;
+  max-width: 1780px;
+}
+
+.import-copy,
+.import-visual {
+  min-width: 0;
+}
+
 .activity-card-group {
   align-items: start;
   display: grid;
@@ -462,8 +577,12 @@
   max-width: 260px;
 }
 
+.import-text-cluster .activity-card-cluster-card:nth-child(1) {
+  margin-top: clamp(72px, 5.6vw, 118px);
+}
+
 .import-text-cluster .activity-card-cluster-card:nth-child(2) {
-  margin-top: clamp(34px, 3vw, 56px);
+  margin-top: clamp(38px, 3.4vw, 70px);
 }
 
 .travel-day-card-left {
@@ -536,7 +655,26 @@
   box-shadow:
     10px 12px 0 rgba(8, 10, 10, 0.14),
     0 20px 36px rgba(8, 10, 10, 0.1);
+  overflow: hidden;
   padding: clamp(18px, 2.4vw, 28px);
+  position: relative;
+}
+
+.travel-day-board::before,
+.trust-panel::before {
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.22) 45%, transparent 72%);
+  content: "";
+  inset: 0;
+  opacity: 0.7;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-125%);
+  transition: transform 700ms ease;
+}
+
+.travel-day-board:hover::before,
+.trust-panel:hover::before {
+  transform: translateX(125%);
 }
 
 .travel-day-board-top {
@@ -730,6 +868,35 @@
 }
 
 @media (min-width: 1024px) {
+  .import-section {
+    max-width: 1840px;
+  }
+
+  .import-layout {
+    gap: clamp(64px, 6vw, 118px);
+  }
+
+  .import-heading {
+    font-size: clamp(68px, 3.85vw, 78px);
+    line-height: 0.96;
+    max-width: 860px;
+  }
+
+  .import-body {
+    font-size: clamp(24px, 1.35vw, 28px);
+    line-height: 1.36;
+    max-width: 780px;
+  }
+
+  .timeline-section {
+    max-width: 1900px;
+  }
+
+  .concept-layout {
+    display: grid;
+    grid-template-columns: minmax(620px, 0.64fr) minmax(430px, 0.36fr);
+  }
+
   .travel-day-layout,
   .trust-layout {
     grid-template-columns: minmax(420px, 560px) minmax(0, 640px);
@@ -760,6 +927,23 @@
 }
 
 @media (min-width: 1280px) {
+  .timeline-layout {
+    align-items: center;
+    display: grid;
+    gap: clamp(72px, 7vw, 132px);
+    grid-template-columns: minmax(420px, 0.32fr) minmax(0, 0.68fr);
+  }
+
+  .timeline-copy {
+    justify-self: start;
+    max-width: 620px;
+  }
+
+  .timeline-visual {
+    justify-self: stretch;
+    max-width: none;
+  }
+
   .activity-card-secondary {
     max-width: 292px;
   }
@@ -862,7 +1046,14 @@
   border-radius: inherit;
   display: block;
   height: 100%;
+  transform-origin: left center;
   width: var(--activity-progress);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-primary-cta:hover::after {
+    animation: none;
+  }
 }
 
 @media (max-width: 639px) {
