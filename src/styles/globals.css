@@ -1015,12 +1015,6 @@ body,
     justify-content: space-between;
   }
 
-  .travel-day-layout,
-  .trust-layout {
-    grid-template-columns: minmax(700px, 840px) minmax(0, 640px);
-    justify-content: space-between;
-  }
-
   .travel-day-copy .travel-day-body {
     max-width: min(100%, 920px);
   }
@@ -1048,13 +1042,6 @@ body,
   }
 }
 
-@media (min-width: 1440px) {
-  .concept-layout,
-  .travel-day-layout {
-    grid-template-columns: minmax(760px, 940px) minmax(0, 640px);
-  }
-}
-
 @media (min-width: 1280px) {
   .hero-section {
     grid-template-columns: minmax(760px, 0.92fr) minmax(700px, 1.08fr);
@@ -1065,11 +1052,21 @@ body,
     max-width: 860px;
   }
 
+  .activity-card-secondary {
+    max-width: 292px;
+  }
+
+  .footer-main {
+    grid-template-columns: minmax(0, 1fr) minmax(520px, 0.85fr);
+  }
+}
+
+@media (min-width: 1536px) {
   .timeline-layout {
     align-items: center;
     display: grid;
     gap: clamp(72px, 7vw, 132px);
-    grid-template-columns: minmax(640px, 0.38fr) minmax(0, 0.62fr);
+    grid-template-columns: minmax(0, 780px) minmax(360px, 1fr);
   }
 
   .timeline-copy {
@@ -1082,12 +1079,10 @@ body,
     max-width: none;
   }
 
-  .activity-card-secondary {
-    max-width: 292px;
-  }
-
-  .footer-main {
-    grid-template-columns: minmax(0, 1fr) minmax(520px, 0.85fr);
+  .travel-day-layout,
+  .trust-layout {
+    grid-template-columns: minmax(0, 760px) minmax(360px, 1fr);
+    justify-content: space-between;
   }
 }
 

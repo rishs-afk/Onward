@@ -2284,14 +2284,20 @@ function ScreensPasswordGate({ onUnlock }: { onUnlock: () => void }) {
   }
 
   return (
-    <main className="flex min-h-[calc(100vh-72px)] items-center justify-center bg-[#EEF3F1] px-5">
+    <main
+      className="flex min-h-[calc(100vh-72px)] items-center justify-center bg-[#F9EFD1] px-5"
+      style={{
+        backgroundImage: "radial-gradient(rgba(8, 10, 10, 0.09) 1.2px, transparent 1.2px)",
+        backgroundSize: "22px 22px",
+      }}
+    >
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-[360px] rounded-[28px] border border-[#DDE4E3] bg-white p-8 shadow-sm"
+        className="onward-reference-card w-full max-w-[380px] p-8"
       >
-        <p className="text-[13px] font-bold text-[#68757B]">Screen library</p>
+        <p className="text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]">Screen library</p>
         <h1
-          className="mt-1 text-[26px] leading-tight text-[#153E4A]"
+          className="mt-2 text-[28px] leading-snug text-[#080A0A]"
           style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
         >
           This section is password protected.
@@ -2302,14 +2308,14 @@ function ScreensPasswordGate({ onUnlock }: { onUnlock: () => void }) {
           value={value}
           onChange={(e) => { setValue(e.target.value); setError(false); }}
           placeholder="Password"
-          className="mt-6 w-full rounded-lg border border-[#DDE4E3] px-4 py-3 text-[15px] font-medium text-[#153E4A] outline-none focus:border-[#153E4A]"
+          className="mt-6 w-full rounded-lg border-2 border-[#080A0A] bg-white px-4 py-3 text-[15px] font-bold text-[#080A0A] outline-none placeholder:text-[#68757B]/70"
         />
         {error && (
-          <p className="mt-2 text-[13px] font-bold text-[#C0392B]">Incorrect password. Try again.</p>
+          <p className="mt-2 text-[13px] font-black text-[#C0392B]">Incorrect password. Try again.</p>
         )}
         <button
           type="submit"
-          className="mt-5 w-full rounded-lg bg-[#153E4A] py-3 text-[15px] font-bold text-white transition-opacity hover:opacity-90"
+          className="hero-primary-cta mt-5 flex w-full items-center justify-center rounded-full bg-[#080A0A] text-white transition-transform hover:-translate-y-0.5"
         >
           Unlock
         </button>
@@ -2330,14 +2336,20 @@ function ScreensPage({ screen, activeGroup, onGroupChange, onNav, isOnboarding, 
   const visibleSections = getSidebarSections(activeGroup);
 
   return (
-    <main className="min-h-[calc(100vh-72px)] bg-[#EEF3F1]">
+    <main
+      className="min-h-[calc(100vh-72px)] bg-[#F9EFD1]"
+      style={{
+        backgroundImage: "radial-gradient(rgba(8, 10, 10, 0.09) 1.2px, transparent 1.2px)",
+        backgroundSize: "22px 22px",
+      }}
+    >
       <section className="mx-auto flex max-w-[1440px] flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8">
-        <div className="rounded-lg border border-[#DDE4E3] bg-white p-4 shadow-sm">
+        <div className="onward-reference-card p-4 sm:p-5">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
             <div>
-              <p className="text-[13px] font-bold text-[#68757B]">Screen library</p>
+              <p className="text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]">Screen library</p>
               <h1
-                className="mt-1 text-[34px] leading-tight text-[#153E4A]"
+                className="mt-1 text-[30px] leading-tight text-[#080A0A] sm:text-[34px]"
                 style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}
               >
                 Explore every Onward concept screen.
@@ -2350,8 +2362,8 @@ function ScreensPage({ screen, activeGroup, onGroupChange, onNav, isOnboarding, 
                   type="button"
                   onClick={() => onGroupChange(group.id)}
                   className={cn(
-                    "h-10 rounded-md px-4 text-[13px] font-bold transition-colors",
-                    activeGroup === group.id ? "bg-[#153E4A] text-white" : "bg-[#F5F7F6] text-[#68757B] hover:bg-[#EEEAE1] hover:text-[#153E4A]"
+                    "h-10 rounded-full border-2 border-[#080A0A] px-4 text-[13px] font-black uppercase tracking-[0.02em] transition-colors",
+                    activeGroup === group.id ? "bg-[#080A0A] text-white" : "bg-white text-[#68757B] hover:bg-[#F6EDC9] hover:text-[#080A0A]"
                   )}
                 >
                   {group.label}
@@ -2362,26 +2374,26 @@ function ScreensPage({ screen, activeGroup, onGroupChange, onNav, isOnboarding, 
         </div>
 
         <div className="grid min-h-[884px] gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
-          <aside className="hidden rounded-lg border border-[#DDE4E3] bg-white p-4 shadow-sm lg:block">
+          <aside className="onward-reference-card hidden p-4 lg:block">
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
-                <p className="text-[13px] font-bold text-[#153E4A]">Catalogue</p>
-                <p className="text-[12px] font-semibold text-[#68757B]">{visibleSections.length} groups</p>
+                <p className="text-[13px] font-black text-[#080A0A]">Catalogue</p>
+                <p className="text-[12px] font-bold text-[#68757B]">{visibleSections.length} groups</p>
               </div>
-              <span className="rounded-md bg-[#EEEAE1] px-2 py-1 text-[12px] font-bold text-[#153E4A]">{SCREEN_COUNT}</span>
+              <span className="rounded-full border-2 border-[#080A0A] bg-white px-2 py-1 text-[12px] font-black text-[#080A0A]">{SCREEN_COUNT}</span>
             </div>
             <div className="flex max-h-[780px] flex-col gap-1 overflow-y-auto pr-1" style={{ scrollbarWidth: "none" }}>
               {visibleSections.map((section) => (
                 <div key={section.title} className="pt-2">
-                  <p className="mb-1 px-2 text-[10px] font-bold uppercase text-[#68757B]">{section.title}</p>
+                  <p className="mb-1 px-2 text-[10px] font-black uppercase tracking-[0.08em] text-[#68757B]">{section.title}</p>
                   {section.items.map((item) => (
                     <button
                       key={item.screen}
                       type="button"
                       onClick={() => onNav(item.screen)}
                       className={cn(
-                        "mb-1 block w-full rounded-md px-2 py-2 text-left text-[12px] font-semibold transition-colors",
-                        screen === item.screen ? "bg-[#153E4A] text-white" : "text-[#172126]/75 hover:bg-[#F5F7F6] hover:text-[#153E4A]"
+                        "mb-1 block w-full rounded-lg px-2 py-2 text-left text-[12px] font-bold transition-colors",
+                        screen === item.screen ? "bg-[#080A0A] text-white" : "text-[#080A0A]/75 hover:bg-[#F6EDC9]"
                       )}
                     >
                       {item.label}
@@ -2392,7 +2404,7 @@ function ScreensPage({ screen, activeGroup, onGroupChange, onNav, isOnboarding, 
             </div>
           </aside>
 
-          <div className="overflow-x-auto rounded-lg border border-[#DDE4E3] bg-[#F5F7F6] shadow-sm">
+          <div className="onward-reference-card overflow-x-auto">
             <PhoneFrame screen={screen} isOnboarding={isOnboarding} onTab={onTab} onNav={onNav}>
               {children}
             </PhoneFrame>
