@@ -772,8 +772,9 @@ const SIDEBAR: [Screen | null, string][] = [
   ["sponsored-disclosure",      "Sponsored Disclosure"],
 ];
 
-type Surface = "home" | "screens";
+type Surface = "home" | "ux" | "screens";
 type ScreenGroupId = "all" | "core" | "live" | "assistant" | "commerce" | "system";
+type UxSectionId = "overview" | "journeys" | "flows" | "diagram" | "screens" | "states" | "principles";
 
 type SidebarSection = {
   title: string;
@@ -984,12 +985,16 @@ function isScreenInGroup(screenId: Screen, groupId: ScreenGroupId) {
   );
 }
 
-function AppNav({ surface, onSurfaceChange }: {
+function AppNav({ surface, activeUxSection, onSurfaceChange, onUxSection }: {
   surface: Surface;
+  activeUxSection: UxSectionId;
   onSurfaceChange: (surface: Surface) => void;
+  onUxSection: (section: UxSectionId) => void;
 }) {
-  const tabs: { id: Surface | "investors"; label: string }[] = [
+  const tabs: { id: Surface | "investors" | "journeys"; label: string }[] = [
     { id: "home", label: "Home" },
+    { id: "ux", label: "UX" },
+    { id: "journeys", label: "User Journeys" },
     { id: "screens", label: "Screens" },
     { id: "investors", label: "For Investors" },
   ];
@@ -1016,10 +1021,23 @@ function AppNav({ surface, onSurfaceChange }: {
               key={tab.id}
               type="button"
               aria-label={tab.label}
-              onClick={() => { if (tab.id !== "investors") onSurfaceChange(tab.id); }}
+              onClick={() => {
+                if (tab.id === "investors") return;
+                if (tab.id === "home" || tab.id === "screens") onSurfaceChange(tab.id);
+                else if (tab.id === "ux") {
+                  onSurfaceChange("ux");
+                  onUxSection("overview");
+                } else {
+                  onSurfaceChange("ux");
+                  onUxSection("journeys");
+                }
+              }}
               className={cn(
                 "onward-nav-link",
-                surface === tab.id
+                (tab.id === "home" && surface === "home") ||
+                  (tab.id === "screens" && surface === "screens") ||
+                  (tab.id === "ux" && surface === "ux" && activeUxSection !== "journeys") ||
+                  (tab.id === "journeys" && surface === "ux" && activeUxSection === "journeys")
                   ? "onward-nav-link-active"
                   : "text-[#68757B] hover:text-[#080A0A]"
               )}
@@ -2324,6 +2342,336 @@ function ScreensPasswordGate({ onUnlock }: { onUnlock: () => void }) {
   );
 }
 
+const UX_WORKSPACE_TABS: { id: UxSectionId; label: string }[] = [
+  { id: "overview", label: "UX Overview" },
+  { id: "journeys", label: "User Journeys" },
+  { id: "flows", label: "User Flows" },
+  { id: "diagram", label: "Flow Diagram" },
+  { id: "screens", label: "Screen Library" },
+  { id: "states", label: "States & Edge Cases" },
+  { id: "principles", label: "UX Principles" },
+];
+
+const UX_JOURNEYS = [
+  {
+    number: "01",
+    title: "First-time setup",
+    description: "A new traveller understands the promise, connects an inbox, scans a useful date range, and reaches their first Journey.",
+    steps: ["Welcome", "How Onward works", "Connect Gmail", "Scan results", "Journeys home"],
+    icon: <MailCheck size={21} />,
+    color: "#F2977A",
+  },
+  {
+    number: "02",
+    title: "Build a Journey",
+    description: "A traveller turns scattered confirmations into one organised plan with reservations, documents, places, and reminders attached.",
+    steps: ["Create Journey", "Add reservation", "Journey timeline", "Journey map", "Documents"],
+    icon: <Route size={21} />,
+    color: "#F5D142",
+  },
+  {
+    number: "03",
+    title: "Travel day",
+    description: "The plan becomes a calm, time-aware companion that keeps the next move, leave-by timing, tickets, and live changes close at hand.",
+    steps: ["Now and next", "Leave-by", "Live status", "Disruption", "Alternative"],
+    icon: <Clock size={21} />,
+    color: "#6FA8F5",
+  },
+  {
+    number: "04",
+    title: "Coordinate with others",
+    description: "Travellers share the right Journey context, invite people, discuss changes, and keep responsibilities visible without rebuilding the plan elsewhere.",
+    steps: ["Share Journey", "Invite traveller", "Permissions", "Comments", "Change approval"],
+    icon: <Users size={21} />,
+    color: "#7FD8CB",
+  },
+  {
+    number: "05",
+    title: "Reflect and manage",
+    description: "After the trip, the traveller reviews what happened, captures spend, exports useful records, and keeps the Journey as a lasting reference.",
+    steps: ["Journey recap", "Spending summary", "Receipts", "Export data", "Archive"],
+    icon: <FileText size={21} />,
+    color: "#E7A6E0",
+  },
+];
+
+const UX_FLOWS = [
+  { title: "Import and review", detail: "Find confirmation emails, extract reservation details, flag uncertainty, and let the traveller accept or correct the result.", steps: "Inbox → Scan → Review → Assign → Journey" },
+  { title: "Plan with the assistant", detail: "Start with a destination or an existing Journey, set preferences and constraints, review generated options, then save only what feels right.", steps: "Intent → Preferences → Generate → Compare → Save" },
+  { title: "Respond to disruption", detail: "Surface the impact on the Journey, explain what changed, offer alternatives, and preserve the traveller's control over the decision.", steps: "Alert → Impact → Alternatives → Confirm → Timeline" },
+  { title: "Share a Journey", detail: "Choose what to share, invite people with clear permissions, and keep activity and approvals attached to the Journey context.", steps: "Share → Invite → Permissions → Activity → Resolve" },
+];
+
+const UX_STATES = [
+  { title: "Empty and first-use", detail: "No Journeys, no active Journey, empty timeline, no imports, and first-use assistant states.", icon: <MapPin size={21} />, color: "#F5D142" },
+  { title: "Review and uncertainty", detail: "Duplicate reservations, unsupported imports, missing details, unclear Journey assignment, and conflicts.", icon: <CalendarClock size={21} />, color: "#F2977A" },
+  { title: "Offline and degraded", detail: "Offline access, unavailable services, stale live data, failed scans, and pending synchronisation.", icon: <Wifi size={21} />, color: "#6FA8F5" },
+  { title: "Privacy and permissions", detail: "Inbox access, location, sharing, connected accounts, personalisation, and data-management decisions.", icon: <ShieldCheck size={21} />, color: "#7FD8CB" },
+];
+
+const FLOW_PHASES: { id: string; label: string; sections: string[] }[] = [
+  {
+    id: "start",
+    label: "1. Start",
+    sections: ["Onboarding", "Imports", "Connected Inboxes & Privacy"],
+  },
+  {
+    id: "organise",
+    label: "2. Organise",
+    sections: ["Timeline", "Journeys", "Reservations", "Journey Map", "Documents", "Journey Preparation"],
+  },
+  {
+    id: "travel",
+    label: "3. Travel",
+    sections: ["Live Travel", "Disruptions & Alternatives", "Leave-by", "Airport & Station Mode", "Baggage", "Travel Alerts", "Live Data"],
+  },
+  {
+    id: "coordinate",
+    label: "4. Coordinate",
+    sections: ["Journey Organisation", "Sharing", "Calendar", "Collaboration", "Travellers", "Location Sharing", "Notifications"],
+  },
+  {
+    id: "assist",
+    label: "5. Assist",
+    sections: ["Assistant", "AI Journey Creation", "Day Planning & Optimisation", "Destination Discovery", "Journey Intelligence", "Briefings", "Travel Preferences", "Packing & Preparation", "Language & Local", "Assistant Controls"],
+  },
+  {
+    id: "manage",
+    label: "6. Manage",
+    sections: ["Settings", "Offline & Storage", "System States", "Travel Wallet", "Journey Expenses", "Group Expenses", "Loyalty", "Booking Hub", "Travel Services", "Post-Journey", "Financial Reports", "Phase 5 Settings", "Phase 5 States"],
+  },
+];
+
+function ScreenFlowDiagram({ onOpenScreen }: { onOpenScreen: (screen: Screen) => void }) {
+  const sectionsByTitle = new Map(SIDEBAR_SECTIONS.map((section) => [section.title, section]));
+  const phaseSections = FLOW_PHASES.map((phase) => ({
+    ...phase,
+    groups: phase.sections.map((title) => sectionsByTitle.get(title)).filter((section): section is SidebarSection => Boolean(section)),
+  }));
+
+  return (
+    <div className="onward-reference-card overflow-hidden p-4 sm:p-5">
+      <div className="flex flex-col gap-4 border-b-2 border-[#080A0A] pb-5 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-[12px] font-black uppercase tracking-[0.12em] text-[#F17455]">Full product flow</p>
+          <h2 className="mt-2 text-[28px] font-black leading-tight text-[#080A0A]">All 316 screens, mapped end to end.</h2>
+          <p className="mt-2 max-w-[760px] text-[14px] font-bold leading-6 text-[#68757B]">
+            Read left to right from setup to post-journey management. Each phase contains its real catalogue groups, and every screen node can open the corresponding phone concept.
+          </p>
+        </div>
+        <div className="flex shrink-0 gap-2 text-[11px] font-black uppercase tracking-[0.05em] text-[#68757B]">
+          <span className="rounded-full border-2 border-[#080A0A] bg-white px-3 py-2">6 phases</span>
+          <span className="rounded-full border-2 border-[#080A0A] bg-white px-3 py-2">46 groups</span>
+          <span className="rounded-full border-2 border-[#080A0A] bg-white px-3 py-2">316 screens</span>
+        </div>
+      </div>
+
+      <div className="mt-5 overflow-x-auto pb-2" style={{ scrollbarWidth: "thin" }}>
+        <div className="min-w-[1420px]">
+          <div className="mb-3 grid grid-cols-6 gap-3">
+            {phaseSections.map((phase, index) => (
+              <div key={phase.id} className="relative flex items-center gap-2">
+                <div className="flex min-h-[54px] flex-1 items-center rounded-xl border-2 border-[#080A0A] px-3" style={{ background: ["#F2977A", "#F5D142", "#6FA8F5", "#7FD8CB", "#E7A6E0", "#F6EDC9"][index] }}>
+                  <span className="text-[13px] font-black uppercase tracking-[0.06em] text-[#080A0A]">{phase.label}</span>
+                </div>
+                {index < phaseSections.length - 1 && <ArrowRight className="absolute -right-3 z-10 text-[#080A0A]" size={19} strokeWidth={3} />}
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-6 items-start gap-3">
+            {phaseSections.map((phase) => (
+              <div key={phase.id} className="flex max-h-[710px] flex-col gap-3 overflow-y-auto pr-1" style={{ scrollbarWidth: "thin" }}>
+                {phase.groups.map((group) => (
+                  <section key={group.title} className="rounded-xl border-2 border-[#080A0A] bg-white p-2.5">
+                    <div className="mb-2 flex items-start justify-between gap-2 border-b-2 border-[#080A0A]/10 pb-2">
+                      <h3 className="text-[11px] font-black uppercase leading-4 tracking-[0.04em] text-[#080A0A]">{group.title}</h3>
+                      <span className="shrink-0 rounded-full border border-[#080A0A] px-1.5 py-0.5 text-[10px] font-black text-[#68757B]">{group.items.length}</span>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      {group.items.map((item) => (
+                        <button
+                          key={item.screen}
+                          type="button"
+                          onClick={() => onOpenScreen(item.screen)}
+                          className="w-full rounded-lg border border-[#080A0A]/15 bg-[#F8FAF8] px-2 py-1.5 text-left text-[10px] font-bold leading-4 text-[#080A0A]/80 transition-colors hover:border-[#080A0A] hover:bg-[#F6EDC9] hover:text-[#080A0A]"
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UxWorkspace({ section, onSectionChange, onOpenScreens, onOpenScreen }: {
+  section: UxSectionId;
+  onSectionChange: (section: UxSectionId) => void;
+  onOpenScreens: () => void;
+  onOpenScreen: (screen: Screen) => void;
+}) {
+  return (
+    <main
+      className="min-h-[calc(100vh-72px)] bg-[#F9EFD1]"
+      style={{
+        backgroundImage: "radial-gradient(rgba(8, 10, 10, 0.09) 1.2px, transparent 1.2px)",
+        backgroundSize: "22px 22px",
+      }}
+    >
+      <section className="mx-auto flex max-w-[1440px] flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8">
+        <div className="onward-reference-card p-5 sm:p-7">
+          <p className="text-[13px] font-black uppercase tracking-[0.14em] text-[#F17455]">UX workspace</p>
+          <div className="mt-2 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-[720px]">
+              <h1 className="text-[34px] leading-[1.05] text-[#080A0A] sm:text-[46px]" style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 400 }}>
+                Design the whole experience, not just the screens.
+              </h1>
+              <p className="mt-4 max-w-[680px] text-[15px] font-bold leading-6 text-[#68757B]">
+                The UX map for Onward: the people, journeys, flows, screens, decisions, and edge cases that make a calm travel organiser feel coherent.
+              </p>
+            </div>
+            <button type="button" onClick={onOpenScreens} className="hero-primary-cta flex items-center justify-center gap-3 rounded-full bg-[#080A0A] text-white transition-transform hover:-translate-y-0.5">
+              Open 316 screens
+              <ArrowRight size={19} />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+          {UX_WORKSPACE_TABS.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => tab.id === "screens" ? onOpenScreens() : onSectionChange(tab.id)}
+              className={cn(
+                "h-10 shrink-0 rounded-full border-2 border-[#080A0A] px-4 text-[12px] font-black uppercase tracking-[0.02em] transition-colors",
+                section === tab.id ? "bg-[#080A0A] text-white" : "bg-white text-[#68757B] hover:bg-[#F6EDC9] hover:text-[#080A0A]"
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {section === "overview" && (
+          <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="onward-reference-card p-5 sm:p-7">
+              <p className="text-[12px] font-black uppercase tracking-[0.12em] text-[#68757B]">The UX model</p>
+              <h2 className="mt-2 text-[28px] font-black leading-tight text-[#080A0A]">Every feature returns to a Journey.</h2>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {[
+                  ["Capture", "Bring reservations and useful source details into Onward."],
+                  ["Organise", "Turn fragments into a clear Journey Timeline and map."],
+                  ["Prepare", "Keep documents, reminders, places, and people together."],
+                  ["Act", "Help with the next move when plans change in real time."],
+                ].map(([title, detail]) => (
+                  <div key={title} className="rounded-xl border-2 border-[#080A0A] bg-white p-4">
+                    <p className="text-[15px] font-black text-[#080A0A]">{title}</p>
+                    <p className="mt-2 text-[13px] font-bold leading-5 text-[#68757B]">{detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="onward-reference-card p-5 sm:p-7">
+              <p className="text-[12px] font-black uppercase tracking-[0.12em] text-[#68757B]">What is mapped</p>
+              <div className="mt-4 divide-y-2 divide-[#080A0A]/10">
+                {[
+                  ["5", "core user journeys"],
+                  ["4", "major cross-screen flows"],
+                  ["316", "concept screens"],
+                  ["46", "catalogue groups"],
+                  ["10", "UX and state categories"],
+                ].map(([number, label]) => (
+                  <div key={label} className="flex items-center justify-between gap-4 py-3">
+                    <span className="text-[28px] font-black text-[#080A0A]">{number}</span>
+                    <span className="text-right text-[13px] font-black uppercase tracking-[0.06em] text-[#68757B]">{label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {section === "journeys" && (
+          <div className="flex flex-col gap-4">
+            {UX_JOURNEYS.map((journey) => (
+              <article key={journey.number} className="onward-reference-card p-5 sm:p-6">
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:gap-8">
+                  <div className="flex shrink-0 items-center gap-3 lg:w-[210px]">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-[#080A0A] text-[#080A0A]" style={{ background: journey.color }}>{journey.icon}</span>
+                    <span className="text-[12px] font-black uppercase tracking-[0.12em] text-[#68757B]">Journey {journey.number}</span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-[24px] font-black text-[#080A0A]">{journey.title}</h2>
+                    <p className="mt-2 max-w-[800px] text-[14px] font-bold leading-6 text-[#68757B]">{journey.description}</p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {journey.steps.map((step, index) => <span key={step} className="rounded-full border-2 border-[#080A0A] bg-white px-3 py-2 text-[11px] font-black uppercase tracking-[0.03em] text-[#080A0A]">{index + 1}. {step}</span>)}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {section === "flows" && (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {UX_FLOWS.map((flow, index) => (
+              <article key={flow.title} className="onward-reference-card p-5 sm:p-6">
+                <p className="text-[12px] font-black uppercase tracking-[0.12em] text-[#F17455]">Flow 0{index + 1}</p>
+                <h2 className="mt-2 text-[23px] font-black text-[#080A0A]">{flow.title}</h2>
+                <p className="mt-3 text-[14px] font-bold leading-6 text-[#68757B]">{flow.detail}</p>
+                <p className="mt-5 rounded-xl border-2 border-[#080A0A] bg-[#F6EDC9] px-4 py-3 text-[12px] font-black uppercase tracking-[0.05em] text-[#080A0A]">{flow.steps}</p>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {section === "diagram" && <ScreenFlowDiagram onOpenScreen={onOpenScreen} />}
+
+        {section === "states" && (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {UX_STATES.map((state) => (
+              <article key={state.title} className="onward-reference-card p-5 sm:p-6">
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-[#080A0A] text-[#080A0A]" style={{ background: state.color }}>{state.icon}</span>
+                <h2 className="mt-5 text-[22px] font-black text-[#080A0A]">{state.title}</h2>
+                <p className="mt-2 text-[14px] font-bold leading-6 text-[#68757B]">{state.detail}</p>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {section === "principles" && (
+          <div className="onward-reference-card p-5 sm:p-7">
+            <div className="grid gap-x-8 gap-y-6 md:grid-cols-2">
+              {[
+                ["Journey-first", "The Journey is the home base. Every reservation, document, reminder, and decision should make more sense in that context."],
+                ["Calm under pressure", "Prioritise what happens next, what changed, and what the traveller can do now."],
+                ["Plain about data", "Make permissions, source material, sharing, and personalisation visible in the moment they matter."],
+                ["Preserve trust", "Keep original confirmations intact, show uncertainty honestly, and never silently invent details."],
+                ["Useful offline", "The most important plan, documents, and next steps should remain available when connectivity does not."],
+                ["Progressive depth", "Keep the main path simple, then expose detail for travellers who need to inspect, edit, or resolve."],
+              ].map(([title, detail]) => (
+                <div key={title} className="border-t-2 border-[#080A0A] pt-4">
+                  <h2 className="text-[20px] font-black text-[#080A0A]">{title}</h2>
+                  <p className="mt-2 text-[14px] font-bold leading-6 text-[#68757B]">{detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+    </main>
+  );
+}
+
 function ScreensPage({ screen, activeGroup, onGroupChange, onNav, isOnboarding, children, onTab }: {
   screen: Screen;
   activeGroup: ScreenGroupId;
@@ -2419,6 +2767,7 @@ function ScreensPage({ screen, activeGroup, onGroupChange, onNav, isOnboarding, 
 
 export default function App() {
   const [surface, setSurface] = useState<Surface>("home");
+  const [activeUxSection, setActiveUxSection] = useState<UxSectionId>("overview");
   const [screensUnlocked, setScreensUnlocked] = useState(false);
   const [activeScreenGroup, setActiveScreenGroup] = useState<ScreenGroupId>("all");
   const [screen, setScreen] = useState<Screen>("launch");
@@ -2434,6 +2783,11 @@ export default function App() {
 
   function handleSurfaceChange(nextSurface: Surface) {
     setSurface(nextSurface);
+  }
+
+  function handleUxSection(section: UxSectionId) {
+    setActiveUxSection(section);
+    setSurface("ux");
   }
 
   function handleScreenGroupChange(group: ScreenGroupId) {
@@ -2788,10 +3142,17 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F5F7F6]" style={{ fontFamily: "'Figtree', sans-serif" }}>
-      <AppNav surface={surface} onSurfaceChange={handleSurfaceChange} />
+      <AppNav surface={surface} activeUxSection={activeUxSection} onSurfaceChange={handleSurfaceChange} onUxSection={handleUxSection} />
 
       {surface === "home" ? (
         <PresentationHome onOpenScreens={() => setSurface("screens")} />
+      ) : surface === "ux" ? (
+        <UxWorkspace
+          section={activeUxSection}
+          onSectionChange={handleUxSection}
+          onOpenScreens={() => setSurface("screens")}
+          onOpenScreen={(nextScreen) => { setScreen(nextScreen); setSurface("screens"); }}
+        />
       ) : !screensUnlocked ? (
         <ScreensPasswordGate onUnlock={() => setScreensUnlocked(true)} />
       ) : (
