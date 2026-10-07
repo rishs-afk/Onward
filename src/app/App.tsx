@@ -2468,18 +2468,18 @@ function ScreenFlowDiagram({ onOpenScreen }: { onOpenScreen: (screen: Screen) =>
 
       <div className="mt-5 overflow-x-auto pb-2" style={{ scrollbarWidth: "thin" }}>
         <div className="min-w-[1420px]">
-          <div className="mb-3 grid grid-cols-6 gap-3">
+          <div className="mb-3 grid grid-cols-6 gap-5">
             {phaseSections.map((phase, index) => (
               <div key={phase.id} className="relative flex items-center gap-2">
                 <div className="flex min-h-[54px] flex-1 items-center rounded-xl border-2 border-[#080A0A] px-3" style={{ background: ["#F2977A", "#F5D142", "#6FA8F5", "#7FD8CB", "#E7A6E0", "#F6EDC9"][index] }}>
                   <span className="text-[13px] font-black uppercase tracking-[0.06em] text-[#080A0A]">{phase.label}</span>
                 </div>
-                {index < phaseSections.length - 1 && <ArrowRight className="absolute -right-3 z-10 text-[#080A0A]" size={19} strokeWidth={3} />}
+                {index < phaseSections.length - 1 && <ArrowRight className="absolute -right-[19px] z-10 text-[#080A0A]" size={19} strokeWidth={3} />}
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-6 items-start gap-3">
+          <div className="grid grid-cols-6 items-start gap-5">
             {phaseSections.map((phase) => (
               <div key={phase.id} className="flex max-h-[710px] flex-col gap-3 overflow-y-auto pr-1" style={{ scrollbarWidth: "thin" }}>
                 {phase.groups.map((group) => (
