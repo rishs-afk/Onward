@@ -1000,7 +1000,7 @@ function AppNav({ surface, activeUxSection, onSurfaceChange, onUxSection }: {
   ];
 
   return (
-    <header className="onward-app-header sticky top-0 z-50 border-b-2 border-[#080A0A] bg-[#F9EFD1]">
+    <header className="onward-app-header border-b-2 border-[#080A0A] bg-[#F9EFD1]">
       <div className="onward-app-nav mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-10">
         <button
           type="button"
@@ -1542,6 +1542,9 @@ function useSectionScroll() {
     const container = containerRef.current;
     if (!container) return;
 
+    // Mobile uses native continuous scrolling instead of section-by-section snapping.
+    if (window.matchMedia("(max-width: 767px)").matches) return;
+
     const getStops = () =>
       Array.from(container.querySelectorAll<HTMLElement>(".onward-section, .onward-footer"));
 
@@ -1920,12 +1923,21 @@ function useLandingGsap(containerRef: React.RefObject<HTMLElement | null>, prefe
 
           ScrollTrigger.create({
             trigger: section,
-            scroller: container,
             start: "top 78%",
             once: true,
             onEnter: () => tl.play(0),
           });
         });
+
+      // Normal document scrolling should never leave a section hidden if its
+      // entrance trigger is skipped during a fast scroll or viewport resize.
+      gsap.set(sections, { autoAlpha: 1, clearProps: "opacity,visibility,transform,filter,clipPath" });
+      gsap.set(
+        container.querySelectorAll(
+          ".section-kicker, .landing-headline-line, .feature-cloud-heading-main, .feature-cloud-heading-script, .landing-copy, .feature-badge, .journey-context-card, .activity-image-card, .mini-timeline-card, .import-flow-card, .day-context-card, .travel-day-board, .trust-panel, .trust-point-card, .travel-day-mini-card, .trust-stat-row > div, .onward-icon-tile, .activity-icon, .mini-timeline-icon, .import-flow-node, .day-context-icon, .travel-day-mini-card span, .trust-point-card span, .activity-progress-track span"
+        ),
+        { autoAlpha: 1, clearProps: "opacity,visibility,transform,filter,clipPath" }
+      );
 
       const refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 250);
       return () => window.clearTimeout(refreshTimer);
@@ -1971,7 +1983,7 @@ function LandingFooter({ id, className, children }: {
 }
 
 function PresentationHome({ onOpenScreens }: { onOpenScreens: () => void }) {
-  const sectionScrollRef = useSectionScroll();
+  const sectionScrollRef = useRef<HTMLElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
   useLandingGsap(sectionScrollRef, prefersReducedMotion);
 

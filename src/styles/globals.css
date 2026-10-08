@@ -9,14 +9,13 @@ body,
 }
 
 .onward-landing {
-  height: calc(100svh - var(--onward-header-height, 70px));
+  min-height: calc(100svh - var(--onward-header-height, 70px));
   background-color: #f9efd1;
   background-image: radial-gradient(rgba(8, 10, 10, 0.09) 1.2px, transparent 1.2px);
   background-position: var(--dot-x, 0) var(--dot-y, 0);
   background-size: 22px 22px;
-  overscroll-behavior-y: contain;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: visible;
 }
 
 .onward-section {
@@ -1202,7 +1201,7 @@ body,
 
 @media (max-width: 639px) {
   .onward-landing {
-    height: calc(100svh - 130px);
+    min-height: calc(100svh - 130px);
   }
 
   .onward-reference-card {
